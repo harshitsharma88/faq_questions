@@ -24,14 +24,23 @@ async function storeRootCategory (req, res, next){
             {name : "LOGIN", type : sql.Bit, value : login},
             {name : "PAGE", type : sql.NVarChar(255), value : page},
             {name : "ISROOT", type : sql.Bit, value : isroot},
-            {name : "HASCHILD", type : sql.Bit, value : child},
+            {name : "HASCHILD", type : sql.Bit, value : true},
             {name : "PARENTID", type : sql.Int, value : parentid},
             {name : "PKGID", type : sql.Int, value : pkgid}
         ];
+        console.log(paramArray);
         const result = await executeStoredProcedure('FAQStoreRootCategory', paramArray);
         return res.status(200).send(result[0]);
     } catch (error) {
         catchBlock(error, 'Storing Question', res)
+    }
+}
+
+async function editCategoryDetails(req, res, next){
+    try {
+        
+    } catch (error) {
+        catchBlock(error, 'Editing Category Details', res);
     }
 }
 
@@ -149,18 +158,49 @@ async function getAnswerDetailsByQstnId(req, res, next){
     }
 }
 
-async function changeRootCategoryStatus(req, res, next){
+async function editCategoryDetails(req, res, next){
     try {
-        const {rootid, action} = req.body;
-        console.log(rootid, action);
+        const {rootid, pkgid, loginrequire, has_child, status, description, page, title, isroot} = req.body;
+        const userid  = req.user  || 'admin';
         const paramArray = [
-            {name : "STATUS", type : sql.Bit, value : action == 'enable'},           
-            {name : "ROOTID", type : sql.Int, value : rootid}
+            {name : "STATUS", type : sql.Bit, value : status},           
+            {name : "ROOTID", type : sql.Int, value : rootid},
+            {name : "UPDATEDBY", type : sql.NVarChar(50), value : userid},
+            {name : "UPDATEDON", type : sql.DateTime, value : new Date()},
+            {name : "PKGID", type : sql.NVarChar(50), value : pkgid},
+            {name : "DESCRIPTION", type : sql.NVarChar(500), value : description},
+            {name : "PAGE", type : sql.NVarChar(100), value : page},
+            {name : "ISROOT", type : sql.Bit, value : isroot},
+            {name : "FAQ_TITLE", type : sql.NVarChar(255), value : title},
+            {name : "HASCHILD", type : sql.Bit, value : has_child},
+            {name : "LOGIN_REQUIRED", type : sql.Bit, value : loginrequire}
         ]
-        const result = await executeStoredProcedure('FAQ_CHANGE_ROOT_CAT_STATUS',paramArray);
+        const result = await executeStoredProcedure('FAQ_CHANGE_CATEGORY_DETAILS',paramArray);
         return res.status(200).send(result[0]);
     } catch (error) {
         catchBlock(error, 'Changing root category status', res);
+    }
+}
+
+async function editQuestionDetails(req, res, next){
+    try {
+        const {qstnid, pkgid, loginrequire, status, description, page, title} = req.body;
+        const userid  = req.user  || 'admin';
+        const paramArray = [
+            {name : "STATUS", type : sql.Bit, value : status},           
+            {name : "QSTNID", type : sql.Int, value : qstnid},
+            {name : "UPDATEDBY", type : sql.NVarChar(50), value : userid},
+            {name : "UPDATEDON", type : sql.DateTime, value : new Date()},
+            {name : "PKGID", type : sql.NVarChar(50), value : pkgid},
+            {name : "DESCRIPTION", type : sql.NVarChar(500), value : description},
+            {name : "PAGE", type : sql.NVarChar(100), value : page},
+            {name : "FAQ_QSTN_TITLE", type : sql.NVarChar(255), value : title},
+            {name : "LOGIN_REQUIRED", type : sql.Bit, value : loginrequire}
+        ]
+        const result = await executeStoredProcedure('FAQ_CHANGE_QUESTION_DETAILS',paramArray);
+        return res.status(200).send(result[0]);  
+    } catch (error) {
+        catchBlock();
     }
 }
 
@@ -173,6 +213,7 @@ module.exports = {
     getAnswerDetailsByQstnId,
     storeNewAnswerDetails,
     getAllRootCategories,
-    changeRootCategoryStatus,
-    getSubCategories
+    editCategoryDetails,
+    getSubCategories,
+    editQuestionDetails
 }
