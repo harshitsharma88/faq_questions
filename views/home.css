@@ -1,0 +1,320 @@
+body{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
+.top-header{
+    width: 100%;
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+    background-color: gray;
+    height: 6vh;
+    text-align: center;
+    color: beige;
+    font-weight: 800;
+    padding: 0.4em;
+}
+
+.hide{
+    display: none;
+}
+
+.top-container{
+    margin-left: 1em;
+}
+
+.top-btn{
+    padding: 0.8em;
+    border: none;
+    border-radius: 0.4em;
+    font-size: medium;
+}
+
+.op-selected{
+ background-color: gray;
+}
+
+.bold-font{
+  font-weight: bold;
+}
+
+/* Input Elements Group Styles */
+
+input[type = "text"]{
+    padding: 1.5em;
+    border-radius: 1em;
+}
+
+.form-group-container{
+    padding: 0.8em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
+    border-radius: 1em;
+    box-shadow: 0 1px 4px rgb(128, 111, 111);
+    height: 70vh;
+    margin: 0.5em;
+    align-self: center;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+}
+
+.form-manadatory-elements{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.add-form-heading{
+    font-family: system-ui;
+    font-weight: bold;
+}
+
+#addctgryform{
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5em;
+    align-self: center;
+}
+
+#addctgryform button[type="submit"]{
+    border: none;
+    background-color: rgba(26, 126, 26, 0.815);
+    box-shadow:  0 1px 4px rgb(128, 111, 111);
+    border-radius: 1em;
+    padding: 0.8em 1em;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: medium;
+    color: white;
+}
+
+.add-ctgry-btn{
+    border: none;
+    background-color: bisque;
+    border-radius: 1em;
+    padding: 0.6em 1em 0.6em 1em;
+}
+
+.form-optional-elements{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+#add-subctgry-titles{
+    display: flex;
+    flex-direction: column;
+    gap : 1em
+}
+
+.add-subctgry-option-plus{
+    border-radius: 0.6em;
+    border: none;
+    padding: 0.5em;
+    background-color: #a0a0a0c0;
+    font-size: medium;
+}
+
+.add-new-ctgry-more-details-form{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.add-remove-input-box-button{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
+.multiple-input-titles-box{
+    display: flex;
+    flex-direction: column;
+    gap :0.7em
+}
+
+select{
+    padding: 0.5em;
+    width: 22vw;
+    border-radius: 0.8em;
+}
+
+input[type = 'text']{
+    padding: 0.5em;
+    border-radius: 0.8em;
+    border: 0.7px solid gray;
+    width: 20vw;
+}
+
+#selectedctgrytitle{
+    padding: 1em;
+    border-radius: 1em;
+}
+
+form button{
+    border: none;
+    border-radius: 3px;
+}
+
+/* Base button styling */
+.btn-loader {
+    position: relative;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  /* Disabled button styling */
+  .btn-loader:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+  }
+  
+  /* Loader effect */
+  .btn-loader.loading {
+    color: transparent; /* Hides text while loading */
+  }
+  
+  .btn-loader.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 3px solid transparent;
+    border-top: 3px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Keyframes for spinning loader */
+  @keyframes spin {
+    from {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+
+  /* Edit Category Container */
+
+  .edit-category-title{
+    border: 1px solid gray;
+    padding: 1em;
+    border-radius: 0.8em;
+  }
+
+  #disable-btn-container{
+    margin-top: 1em;
+  }
+
+  .disable-btn-color{
+    background-color: #ec2b2b;
+  }
+
+  .enable-btn-color{
+    background-color: #20e020;
+  }
+
+  /* Edit Category Drop-Down Menu */
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    width: 25em;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Dropdown button */
+  .dropdown #dropdownButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #6da387;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 16px;
+  }
+
+  .edit-ctgry-options-btn{
+    border: none;
+    color: white;
+    border-radius: 0.6em;
+    align-self: flex-end;
+    padding: 0.8em;
+    background-color: #3498db;
+    margin-top: 2em;
+  }
+
+  .dropdown button:focus {
+    outline: none;
+  }
+
+  /* Dropdown content (hidden by default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  /* Search input styling */
+  .dropdown-content input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    font-size: 14px;
+  }
+
+  /* Dropdown options */
+  .dropdown-content ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 150px; /* Adds a scroll bar */
+    overflow-y: auto;
+  }
+
+  .dropdown-content li {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    align-items: center;
+  }
+
+  .ctgry-statustype-dot{
+    font-size: 2rem;
+    display:inline-block;
+    margin-right:1rem;
+    vertical-align: middle;
+  }
+
+  .dropdown-content li:hover {
+    background-color: #f1f1f1;
+  }
+
+  /* Show dropdown content */
+  .show {
+    display: block;
+  }
+
+  /* // */
