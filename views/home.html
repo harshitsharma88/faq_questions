@@ -1,66 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQs</title>
     <link rel="stylesheet" href="home.css">
 </head>
+
 <body>
-    <p class="top-header">FAQs</p>
+    <p class="top-header">Frequently Asked Questions(FAQs)</p>
     <div class="top-container">
         <button class="top-btn" id="add-qstn-top-btn" onclick="handleNewEditBtn(event,'add')">Add New Category</button>
-        <button class="top-btn" id="edit-qstn-top-btn" onclick="handleNewEditBtn(event,'edit')">Edit or Update Category</button>
+        <button class="top-btn" id="edit-qstn-top-btn" onclick="handleNewEditBtn(event,'edit')">Edit or Update
+            Category</button>
         <div class="form-group-container">
             <div class="form-container hide" id="add-ctgry-form-container">
-                <p class="add-form-heading">Add New Root Category</p>
+              
                 <div id="create-new-ctgry-form-container">
-                    <form onsubmit="postNewRootCategory(event)" id="addctgryform" class="">
-                        <div class="form-manadatory-elements" style="gap: 10px;">
-                            <p class="bold-font">Enter Title for Root Category<i style="color: red;font-size: small;">*</i></p>
+                    <p class="add-form-heading">Add New Root Category</p>
+                    <form onsubmit="postNewRootCategory(event)" id="addctgryform">
+                        <div class="form-mandatory-elements">
+                            <p class="form-label">Enter Title for Root Category<i class="required">*</i></p>
                             <input type="text" placeholder="Enter Category Title" id="add-new-ctgry-input" name="ctgrytitle" required>
-                            <div style="display: flex;flex-direction: column; gap: 5px;">
-                            <label class="bold-font" for="countries">
-                                Choose Package (Optional)
-                            </label>
-                            <select name="countries" id="country-list-adding-new-root" onchange="selectedCountryInNewRoot(event)">
-                                <option value="" selected disabled>Choose Country..</option>
-                            </select>
-                            <select name="packageid" class="hide" id="package-list-for-country">
-                                <option value="" selected disabled>Choose Package..</option>
-                            </select>
+                
+                            <div class="select-container">
+                                <label class="form-label" for="countries">Choose Package (Optional)</label>
+                                <select name="countries" id="country-list-adding-new-root" onchange="selectedCountryInNewRoot(event)">
+                                    <option value="" selected disabled>Choose Country..</option>
+                                </select>
+                                <select name="packageid" class="hide" id="package-list-for-country">
+                                    <option value="" selected disabled>Choose Package..</option>
+                                </select>
                             </div>
+                
                             <div class="login-required-radio">
-                                <p style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Is Login Required<i style="font-size: smaller; color: red;">*</i></p>
-                                <label for="">
-                                    <input type="radio" class="" name="loginrequire" value="true" required>
-                                    Yes
+                                <p class="form-label">Is Login Required<i class="required">*</i></p>
+                                <label>
+                                    <input type="radio" name="loginrequire" value="true" required> Yes
                                 </label>
-                                <label for="">
-                                    <input type="radio" class="" name="loginrequire" value="false" required>
-                                    No
+                                <label>
+                                    <input type="radio" name="loginrequire" value="false" required> No
                                 </label>
                             </div>
                         </div>
+                
                         <div class="form-optional-elements">
-                            <label for="description">
-                                Add description (If Any)
-                            </label>
-                                <input type="text" placeholder="Type here" id="" name="description">
-                            <label for="page">
-                                Attach on Page (Optional)
-                            </label>
-                                <input type="text" placeholder="Type here" id="" name="page">
-                            </select>
+                            <label for="description" class="form-label">Add description (If Any)</label>
+                            <input type="text" placeholder="Type here" name="description">
+                
+                            <label for="page" class="form-label">Attach on Page (Optional)</label>
+                            <input type="text" placeholder="Type here" name="page">
                         </div>
+                
                         <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add</button>
                     </form>
                 </div>
+                
+                <!-- Modal Structure with Unique Class -->
+                <!-- <div id="confirmation-modal" class="root-category-modal">
+                    <div class="modal-content">
+                        <h2>Choose an Action</h2>
+                        <button class="choose-sub-category-btn" onclick="chooseSubCategory()">Choose Sub-category</button>
+                        <button class="add-question-btn" onclick="addQuestion()">Add Question</button>
+                    </div>
+                </div> -->
+                
+
                 <!-- //// -->
-                 <div class="" id="add-ctgry-more-detail">
-                     <div class="multiple-nested-selects" id="nested-new-subctgry-selectdiv">
-                     </div>
-                     <input type="text" value="" class="parentid" id="add-new-ctgry-id" readonly>
+                <div class="multiple-nested-selects" id="nested-new-subctgry-selectdiv">
+                </div>
+                <input type="text" value="" class="parentid" id="add-new-ctgry-id" readonly>
+                <div class="" id="add-ctgry-more-detail">
+                    
                     <div class="" id="add-new-ctgry-subctgry">
                         <form onsubmit="postNewRootSubCategory(event)" class="">
                             <div class="form-manadatory-elements">
@@ -69,11 +81,14 @@
                                 <label for="countries">
                                     Choose Package (Optional)
                                 </label>
-                                <select name="countries" class="countrylist" onchange="selectedCountryInSubCtgry(event)">
+                                <select name="countries" class="countrylist"
+                                    onchange="selectedCountryInSubCtgry(event)">
                                     <option value="" selected disabled>Choose Country..</option>
                                 </select>
                                 <div class="login-required-radio">
-                                    <p style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Is Login Required<i style="font-size: smaller; color: red;">*</i></p>
+                                    <p
+                                        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+                                        Is Login Required<i style="font-size: smaller; color: red;">*</i></p>
                                     <label for="">
                                         <input type="radio" class="" name="loginrequire" value="true" required>
                                         Yes
@@ -83,8 +98,10 @@
                                         No
                                     </label>
                                 </div>
-                                <div class="has-child-radio">
-                                    <p style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Can Have Sub Category<i style="font-size: smaller; color: red;">*</i></p>
+                                <!-- <div class="has-child-radio">
+                                    <p
+                                        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+                                        Can Have Sub Category<i style="font-size: smaller; color: red;">*</i></p>
                                     <label for="">
                                         <input type="radio" class="" name="haschild" value="true" required>
                                         Yes
@@ -93,30 +110,39 @@
                                         <input type="radio" class="" name="haschild" value="false" required>
                                         No
                                     </label>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="form-optional-elements">
                                 <label for="description">
                                     Add description (If Any)
                                 </label>
-                                    <input type="text" placeholder="Type here" id="" name="description">
+                                <input type="text" placeholder="Type here" id="" name="description">
                                 <label for="page">
                                     Attach on Page (Optional)
                                 </label>
-                                    <input type="text" placeholder="Type here" id="" name="page">
+                                <input type="text" placeholder="Type here" id="" name="page">
                                 </select>
                             </div>
                             <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Sub-Category</button>
                         </form>
                     </div>
+                    <div class="root-category-modal" style="display:none;">
+                        <div class="modal-content">
+                            <button onclick="addMoreSubCategory()" class="add-question-btn">Add More Sub-Category</button>
+                            <button onclick="addQuestion()" class="choose-sub-category-btn">Add Question</button>
+                        </div>
+                    </div>
+                    
                     <div class="hide" id="add-new-ctgry-question">
                         <form action="">
                             <label for="ctgry-title">Root Category Title</label>
                             <input type="text" name="ctgry-rootid" id="new-ctgryqstn-rootid-hidden" hidden>
                             <input type="text" name="ctgry-title" id="new-ctgryqstn-faqtitle-hidden" readonly>
                             <div class="add-remove-input-box-button">
-                                <button type="button" class="add-subctgry-option-plus" onclick="addRemoveMoreCtrgyQstnsTitle(event,'add')">+</button>
-                                <button type="button" class="add-subctgry-option-plus" onclick="addRemoveMoreCtrgyQstnsTitle(event,'remove')">-</button>
+                                <button type="button" class="add-subctgry-option-plus"
+                                    onclick="addRemoveMoreCtrgyQstnsTitle(event,'add')">+</button>
+                                <button type="button" class="add-subctgry-option-plus"
+                                    onclick="addRemoveMoreCtrgyQstnsTitle(event,'remove')">-</button>
                             </div>
                             <div class="multiple-input-titles-box" id="add-new-ctgry-qstn-title-inputs-container">
                                 <input type="text" placeholder="Enter Question title" required>
@@ -124,27 +150,32 @@
                             <button class="btn-loader" type="submit">Submit</button>
                         </form>
                     </div>
-                 </div>
+                </div>
             </div>
             <div class="form-container hide" id="edit-qstn-form-container">
                 <p class="add-form-heading">Edit Question or Category</p>
                 <div class="dropdown">
                     <button id="dropdownButton">Select a Category</button>
                     <div class="dropdown-content" id="dropdownContent">
-                      <input type="text" id="searchInput" placeholder="Search...">
-                      <ul id="all-root-categories" onselect="selected(event)">
-                      </ul>
+                        <input type="text" id="searchInput" placeholder="Search...">
+                        <ul id="all-root-categories" onselect="selected(event)">
+                        </ul>
                     </div>
-                  </div>
+                </div>
                 <div>
                     <div class="hide" id="disable-btn-container">
                         <input class="edit-category-title" id="edit-ctgry-title-p" />
                         <div class="multiple-nested-selects" id="nested-edit-subctgry-selectdiv">
                         </div>
                         <div>
-                            <button class="edit-ctgry-options-btn disable-enable-btn btn-loader" id="ctgry-disable-enable-btn" onclick="disableEnableRootCategory(event)"></button>
-                            <button class="edit-ctgry-options-btn btn-loader" style="background-color: #3498db;" id="edit-panel-ctgry-add-subctgry-btn" onclick="editPanelAddSubCtgryBtnHandler(event)">Add Sub-Category</button>
-                            <button class="edit-ctgry-options-btn btn-loader" style="background-color: #FFA726;" id="edit-panel-ctgry-add-newqstn-btn" onclick="editPanelAddNewQstnHandler(event)">Add New Question</button>
+                            <button class="edit-ctgry-options-btn disable-enable-btn btn-loader"
+                                id="ctgry-disable-enable-btn" onclick="disableEnableRootCategory(event)"></button>
+                            <button class="edit-ctgry-options-btn btn-loader" style="background-color: #3498db;"
+                                id="edit-panel-ctgry-add-subctgry-btn"
+                                onclick="editPanelAddSubCtgryBtnHandler(event)">Add Sub-Category</button>
+                            <button class="edit-ctgry-options-btn btn-loader" style="background-color: #FFA726;"
+                                id="edit-panel-ctgry-add-newqstn-btn" onclick="editPanelAddNewQstnHandler(event)">Add
+                                New Question</button>
                         </div>
                     </div>
                     <div class="hide" id="edit-panel-add-subctgry-form-container">
@@ -156,11 +187,14 @@
                                     <label for="countries">
                                         Choose Package (Optional)
                                     </label>
-                                    <select name="countries" class="countrylist" onchange="selectedCountryInSubCtgry(event)">
+                                    <select name="countries" class="countrylist"
+                                        onchange="selectedCountryInSubCtgry(event)">
                                         <option value="" selected disabled>Choose Country..</option>
                                     </select>
                                     <div class="login-required-radio">
-                                        <p style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Is Login Required<i style="font-size: smaller; color: red;">*</i></p>
+                                        <p
+                                            style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+                                            Is Login Required<i style="font-size: smaller; color: red;">*</i></p>
                                         <label for="">
                                             <input type="radio" class="" name="loginrequire" value="true" required>
                                             Yes
@@ -171,7 +205,9 @@
                                         </label>
                                     </div>
                                     <div class="has-child-radio">
-                                        <p style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Can Have Sub Category<i style="font-size: smaller; color: red;">*</i></p>
+                                        <p
+                                            style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+                                            Can Have Sub Category<i style="font-size: smaller; color: red;">*</i></p>
                                         <label for="">
                                             <input type="radio" class="" name="haschild" value="true" required>
                                             Yes
@@ -186,14 +222,15 @@
                                     <label for="description">
                                         Add description (If Any)
                                     </label>
-                                        <input type="text" placeholder="Type here" id="" name="description">
+                                    <input type="text" placeholder="Type here" id="" name="description">
                                     <label for="page">
                                         Attach on Page (Optional)
                                     </label>
-                                        <input type="text" placeholder="Type here" id="" name="page">
+                                    <input type="text" placeholder="Type here" id="" name="page">
                                     </select>
                                 </div>
-                                <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Sub-Category</button>
+                                <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add
+                                    Sub-Category</button>
                             </form>
                         </div>
                     </div>
@@ -205,7 +242,8 @@
             </div>
         </div>
     </div>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="home.js"></script>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="home.js"></script>
+</body>
+
 </html>
