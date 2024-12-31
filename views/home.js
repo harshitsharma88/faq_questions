@@ -260,45 +260,42 @@ async function appendAllRootCategories() {
   }
 }
 
-// function handleNewEditBtn(event){
-//   if(event.target.classList.contains("top-btn")){
-//     const type = event.target.getAttribute("data-action");
-//     console.log(type)
-//     // console.log( event.target.parentElement.parentElement.querySelector(".form-group-container").childNodes)
-//     event.target.parentElement.parentElement.querySelector(".form-group-container").querySelectorAll("div").forEach((formContainer)=>{
-//       formContainer.classList.add("hide");
-//       console.log(formContainer)
-//     });
-//     // switch (type) {
-//     //   case 'add':
-//     //     addQstnFormContainer.classList.remove("hide");
-//     //     break;
-//     //   case 'edit':
-//     //     editQstnFormContainer.classList.remove("hide");
-//     //     break;
-//     //   case 'qstn':
-//     //     break;
-//     // }
-//   }
-// }
-
-function handleNewEditBtn(event, type) {
-  switch (type) {
-    case "add":
-      editQstnBtn.classList.remove("op-selected");
-      addNewQstnBtn.classList.add("op-selected");
-      editQstnFormContainer.classList.add("hide");
-      addQstnFormContainer.classList.remove("hide");
-      break;
-    case "edit":
-      addNewQstnBtn.classList.remove("op-selected");
-      editQstnBtn.classList.add("op-selected");
-      addQstnFormContainer.classList.add("hide");
-      editQstnFormContainer.classList.remove("hide");
-      break;
-    case "qstn":
+function handleNewEditBtn(event){
+  if(event.target.classList.contains("top-btn")){
+    const type = event.target.getAttribute("data-action");
+    document.querySelector("#form-group-container").querySelectorAll(".form-container").forEach((formContainer)=>{
+      formContainer.classList.add("hide");
+    });
+    switch (type) {
+      case 'add':
+        addQstnFormContainer.classList.remove("hide");
+        break;
+      case 'edit':
+        editQstnFormContainer.classList.remove("hide");
+        break;
+      case 'qstn':
+        break;
+    }
   }
 }
+
+// function handleNewEditBtn(event, type) {
+//   switch (type) {
+//     case "add":
+//       editQstnBtn.classList.remove("op-selected");
+//       addNewQstnBtn.classList.add("op-selected");
+//       editQstnFormContainer.classList.add("hide");
+//       addQstnFormContainer.classList.remove("hide");
+//       break;
+//     case "edit":
+//       addNewQstnBtn.classList.remove("op-selected");
+//       editQstnBtn.classList.add("op-selected");
+//       addQstnFormContainer.classList.add("hide");
+//       editQstnFormContainer.classList.remove("hide");
+//       break;
+//     case "qstn":
+//   }
+// }
 
 async function postNewRootCategory(event) {
   event.preventDefault();
