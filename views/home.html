@@ -11,10 +11,18 @@
 <body>
     <p class="top-header">Frequently Asked Questions(FAQs)</p>
     <div class="top-container">
-        <button class="top-btn" id="add-qstn-top-btn" onclick="handleNewEditBtn(event,'add')">Add New Category</button>
-        <button class="top-btn" id="edit-qstn-top-btn" onclick="handleNewEditBtn(event,'edit')">Edit or Update
-            Category</button>
+        <div class="top-btn-container">
+            <button class="top-btn" id="add-qstn-top-btn" data-action="add" onclick="handleNewEditBtn(event,'add')">Add New Category</button>
+            <button class="top-btn" id="edit-qstn-top-btn" data-action="edit" onclick="handleNewEditBtn(event,'edit')">Edit or Update Category</button>
+            <button class="top-btn" id="add-new-qstn-top-btn" data-action="qstn" onclick="handleNewEditBtn(event,'qstn')">Add New Question</button>
+        </div>
         <div class="form-group-container">
+            <div class="root-category-modal" id="subcategory-modal" style="display:none;">
+                <div class="modal-content">
+                    <button  id="add-more-subcategory-btn" class="add-question-btn">Add More Sub-Category</button>
+                    <button class="choose-sub-category-btn" id="add-question-btn">Add Question</button>
+                </div>
+            </div>
             <div class="form-container hide" id="add-ctgry-form-container">
               
                 <div id="create-new-ctgry-form-container">
@@ -81,7 +89,7 @@
                                 <label for="countries">
                                     Choose Package (Optional)
                                 </label>
-                                <select name="countries" class="countrylist"
+                                <select name="countries" id="countrylist-subctgry" class="countrylist "
                                     onchange="selectedCountryInSubCtgry(event)">
                                     <option value="" selected disabled>Choose Country..</option>
                                 </select>
@@ -125,12 +133,6 @@
                             </div>
                             <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Sub-Category</button>
                         </form>
-                    </div>
-                    <div class="root-category-modal" style="display:none;">
-                        <div class="modal-content">
-                            <button onclick="addMoreSubCategory()" class="add-question-btn">Add More Sub-Category</button>
-                            <button onclick="addQuestion()" class="choose-sub-category-btn">Add Question</button>
-                        </div>
                     </div>
                     
                     <div class="hide" id="add-new-ctgry-question">
@@ -239,6 +241,8 @@
                         </form>
                     </div>
                 </div>
+            </div>
+            <div class="form-container hide" id="add-new-qstn-form-container">
             </div>
         </div>
     </div>

@@ -1,6 +1,7 @@
 const main_url = "https://apidev.cultureholidays.com/api";
 let base_URL = "";
 base_URL = "https://horribly-smashing-humpback.ngrok-free.app";
+base_URL = "http://localhost:3000";
 
 const addNewQstnBtn = document.getElementById("add-qstn-top-btn");
 const editQstnBtn = document.getElementById("edit-qstn-top-btn");
@@ -47,34 +48,163 @@ const addNewCtrgyInput = document.getElementById("add-new-ctgry-input");
 const addNewCtgryFormButton = document.getElementById("add-ctgry-form-btn");
 const addNewQstnForm = document.getElementById("add-new-subctgry");
 
+
+let countryListSelect = "";
 document.addEventListener("DOMContentLoaded", async () => {
   if (!localStorage.getItem("token")) {
     location.href = "login.html";
   }
   const { data } = await getRequest(`${main_url}/Holidays/Countrylist`);
-  if (Array.isArray(data) && data.length > 0) updateAllCountriesList(data);
+  if (Array.isArray(data) && data.length > 0) {
+    localStorage.setItem("country-list", JSON.stringify(data));
+    data.forEach(country =>{
+      countryListSelect += `<option value=${country.countryCode}>${country.countryName}</option>`
+    })
+    updateAllCountriesList(data);
+  }
   appendAllRootCategories();
 });
 
 async function getRequest(url) {
-  return await axios({
-    method: "GET",
-    url,
-    headers: {
-      Authorization: localStorage.getItem("token"),
-    },
-  });
+  try {
+    return await axios({
+      method: "GET",
+      url,
+      headers: {
+        "ngrok-skip-browser-warning": "69420",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+    
+  } catch (error) {
+    if(error.response &&error.response.status == 401) {
+      localStorage.clear();
+      location.replace("/login.html");
+    }
+    throw new Error(error);
+  }
 }
 
 async function postRequest(url, data) {
-  return await axios({
-    method: "POST",
-    url,
-    headers: {
-      Authorization: localStorage.getItem("token"),
-    },
-    data,
-  });
+  try {
+    return await axios({
+      method: "POST",
+      url,
+      headers: {
+        "ngrok-skip-browser-warning": "69420",
+        Authorization: localStorage.getItem("token"),
+      },
+      data,
+    });
+  } catch (error) {
+    if(error.response &&error.response.status == 401){
+      localStorage.clear();
+       location.replace("/login.html");
+      }
+    throw new Error(error);
+  }
+}
+
+function makeAddSubCategoryForm(parentId, countryListOptions){
+  const formElement = document.createElement("form");
+  formElement.onsubmit = (event)=>{
+    postNewRootSubCategory(event, parentId)
+  };
+  formElement.innerHTML = `<div class="form-manadatory-elements">
+                                <p>Enter Title for Sub-Category<i style="color: red;font-size: small;">*</i></p>
+                                <input type="text" data placeholder="Enter Category Title" name="ctgrytitle" required>
+                                <label for="countries">
+                                    Choose Package (Optional)
+                                </label>
+                                <select name="countries" id="countrylist-subctgry" class="countrylist "
+                                    onchange="selectedCountryInSubCtgry(event)">
+                                    <option value="" selected disabled>Choose Country..</option>
+                                    ${countryListOptions}
+                                </select>
+                                <div class="login-required-radio">
+                                    <p
+                                        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+                                        Is Login Required<i style="font-size: smaller; color: red;">*</i></p>
+                                    <label for="">
+                                        <input type="radio" class="" name="loginrequire" value="true" required>
+                                        Yes
+                                    </label>
+                                    <label for="">
+                                        <input type="radio" class="" name="loginrequire" value="false" required>
+                                        No
+                                    </label>
+                                </div>
+                                <!-- <div class="has-child-radio">
+                                    <p
+                                        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+                                        Can Have Sub Category<i style="font-size: smaller; color: red;">*</i></p>
+                                    <label for="">
+                                        <input type="radio" class="" name="haschild" value="true" required>
+                                        Yes
+                                    </label>
+                                    <label for="">
+                                        <input type="radio" class="" name="haschild" value="false" required>
+                                        No
+                                    </label>
+                                </div> -->
+                            </div>
+                            <div class="form-optional-elements">
+                                <label for="description">
+                                    Add description (If Any)
+                                </label>
+                                <input type="text" placeholder="Type here" id="" name="description">
+                                <label for="page">
+                                    Attach on Page (Optional)
+                                </label>
+                                <input type="text" placeholder="Type here" id="" name="page">
+                                </select>
+                            </div>
+                            <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Sub-Category</button>`
+}
+
+function makeAddQuestionForm(ctgryId, countryListOptions){
+  const formElement = document.createElement("form");
+  formElement.onsubmit = (event)=>{
+    postNewQuestion(event, ctgryId)
+  };
+  formElement.innerHTML = `<div class="form-manadatory-elements">
+                                <p>Enter Question Title<i style="color: red;font-size: small;">*</i></p>
+                                <input type="text" data placeholder="Question Title" name="qstntitle" required>
+                                <label for="countries">
+                                    Choose Package (Optional)
+                                </label>
+                                <select name="countries" id="countrylist-subctgry" class="countrylist "
+                                    onchange="selectedCountryInSubCtgry(event)">
+                                    <option value="" selected disabled>Choose Country..</option>
+                                    ${countryListOptions || countryListSelect}
+                                </select>
+                                <div class="login-required-radio">
+                                    <p
+                                        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+                                        Is Login Required<i style="font-size: smaller; color: red;">*</i></p>
+                                    <label for="">
+                                        <input type="radio" class="" name="loginrequire" value="true" required>
+                                        Yes
+                                    </label>
+                                    <label for="">
+                                        <input type="radio" class="" name="loginrequire" value="false" required>
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-optional-elements">
+                                <label for="description">
+                                    Add description (If Any)
+                                </label>
+                                <input type="text" placeholder="Type here" id="" name="description">
+                                <label for="page">
+                                    Attach on Page (Optional)
+                                </label>
+                                <input type="text" placeholder="Type here" id="" name="page">
+                                </select>
+                            </div>
+                            <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Questiony</button>`
+          return formElement;
 }
 
 function updateAllCountriesList(countriesArray) {
@@ -106,14 +236,11 @@ async function updatePackagesList(packagesArray) {
 }
 
 async function appendAllRootCategories() {
-  const { data } = await axios({
-    method: "GET",
-    url: `${base_URL}/faq/getallroots`,
-    headers: {
-      Authorization: localStorage.getItem("token"),
-    },
-  });
+  console.log("Appeding All Root Categories");
+  const {data} = await getRequest(`${base_URL}/faq/getallroots`);
+  console.log(data);
   if (Array.isArray(data) && data.length > 0) {
+    console.log(data.length);
     data.forEach((ctgry) => {
       const liElement = document.createElement("li");
       liElement.addEventListener("click", rooCategorySelected);
@@ -133,6 +260,28 @@ async function appendAllRootCategories() {
   }
 }
 
+// function handleNewEditBtn(event){
+//   if(event.target.classList.contains("top-btn")){
+//     const type = event.target.getAttribute("data-action");
+//     console.log(type)
+//     // console.log( event.target.parentElement.parentElement.querySelector(".form-group-container").childNodes)
+//     event.target.parentElement.parentElement.querySelector(".form-group-container").querySelectorAll("div").forEach((formContainer)=>{
+//       formContainer.classList.add("hide");
+//       console.log(formContainer)
+//     });
+//     // switch (type) {
+//     //   case 'add':
+//     //     addQstnFormContainer.classList.remove("hide");
+//     //     break;
+//     //   case 'edit':
+//     //     editQstnFormContainer.classList.remove("hide");
+//     //     break;
+//     //   case 'qstn':
+//     //     break;
+//     // }
+//   }
+// }
+
 function handleNewEditBtn(event, type) {
   switch (type) {
     case "add":
@@ -147,6 +296,7 @@ function handleNewEditBtn(event, type) {
       addQstnFormContainer.classList.add("hide");
       editQstnFormContainer.classList.remove("hide");
       break;
+    case "qstn":
   }
 }
 
@@ -213,6 +363,13 @@ function addCategoryMoreDetail(data) {
 
 async function makeNewSubCtgryForm(rootData) {
   const { data } = await getRequest(`${base_URL}/faq/getactiveroot`);
+  const subctgryCountrySelect = document.querySelector("#countrylist-subctgry");
+  JSON.parse(localStorage.getItem("country-list")).forEach(country =>{
+    const option = document.createElement("option");
+    option.value = country.countryCode;
+    option.textContent = country.countryName;
+    subctgryCountrySelect.appendChild(option);
+  })
   const parentInputBox = document.querySelector("#add-new-ctgry-id");
   parentInputBox.setAttribute("data-ctgryid", rootData.faq_root_id);
   parentInputBox.value = rootData.faq_title;
@@ -231,6 +388,25 @@ async function makeNewSubCtgryForm(rootData) {
     });
     nestedSelectDiv.appendChild(select);
   }
+}
+
+async function selectedCountryInSubCtgry(event){
+  const { data } = await getRequest(
+    `${main_url}/Holidays/PackagelistByCountrycode?Countrycode=${event.target.value}`
+  );
+  if (Array.isArray(data) && data.length > 0) updatePackagesListinSubCtgry(data,event.target);
+}
+
+function updatePackagesListinSubCtgry(packagesArray, countrySelect){
+  const select = document.createElement("select");
+  packagesArray.forEach((package) => {
+    const option = document.createElement("option");
+    option.value = package.pkgID;
+    option.textContent = package.pkgTitle;
+    select.appendChild(option);
+  });
+  select.setAttribute("name","pkgid");
+  countrySelect.insertAdjacentElement("afterend",select);
 }
 
 async function makeSubCategoriesSelect(event) {
@@ -363,13 +539,13 @@ async function disableEnableRootCategory(event) {
   event.target.disabled = true;
   const { data } = await axios({
     method: "POST",
-    url: `${base_URL}/faq/changectgrystatus`,
+    url: `${base_URL}/faq/editcategory`,
     headers: {
       Authorization: localStorage.getItem("token"),
     },
     data: {
       rootid,
-      action,
+      status : action == 'enable',
     },
   });
   event.target.classList.remove("loading");
@@ -448,19 +624,75 @@ function createSubCtgryForRoot(event) {
 
 async function editPanelAddSubCtgryBtnHandler(event) {
   const rootid = event.target.getAttribute("data-rootid");
+  const div = document.createElement("div");
+  let selectHTML = "";
+  JSON.parse(localStorage.getItem("country-list")).forEach(country =>{
+    selectHTML += `<option value=${country.countryCode}>${country.countryName}</option>`
+  })
+  div.innerHTML =  `<form onsubmit="postNewRootSubCategory(event, ${rootid})" class="">
+                            <div class="form-manadatory-elements">
+                                <p>Enter Title for Sub-Category<i style="color: red;font-size: small;">*</i></p>
+                                <input type="text" data placeholder="Enter Category Title" name="ctgrytitle" required>
+                                <label for="countries">
+                                    Choose Package (Optional)
+                                </label>
+                                <select name="countries" id="countrylist-subctgry" class="countrylist "
+                                    onchange="selectedCountryInSubCtgry(event)">
+                                    <option value="" selected disabled>Choose Country..</option>
+                                    ${selectHTML}
+                                </select>
+                                <div class="login-required-radio">
+                                    <p
+                                        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+                                        Is Login Required<i style="font-size: smaller; color: red;">*</i></p>
+                                    <label for="">
+                                        <input type="radio" class="" name="loginrequire" value="true" required>
+                                        Yes
+                                    </label>
+                                    <label for="">
+                                        <input type="radio" class="" name="loginrequire" value="false" required>
+                                        No
+                                    </label>
+                                </div>
+                                <!-- <div class="has-child-radio">
+                                    <p
+                                        style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+                                        Can Have Sub Category<i style="font-size: smaller; color: red;">*</i></p>
+                                    <label for="">
+                                        <input type="radio" class="" name="haschild" value="true" required>
+                                        Yes
+                                    </label>
+                                    <label for="">
+                                        <input type="radio" class="" name="haschild" value="false" required>
+                                        No
+                                    </label>
+                                </div> -->
+                            </div>
+                            <div class="form-optional-elements">
+                                <label for="description">
+                                    Add description (If Any)
+                                </label>
+                                <input type="text" placeholder="Type here" id="" name="description">
+                                <label for="page">
+                                    Attach on Page (Optional)
+                                </label>
+                                <input type="text" placeholder="Type here" id="" name="page">
+                                </select>
+                            </div>
+                            <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Sub-Category</button>
+                        </form>`
+  event.target.parentElement.parentElement.appendChild(div);
   const { data } = await postRequest(
     `${base_URL}/faq/getctgry?ROOTID=${rootid}`
   );
-  console.log(data);
   editPanelAddNewQstnFormContainer.classList.add("hide");
   editPanelAddSubCtgryFormContainer.classList.remove("hide");
 }
 
 async function editPanelAddNewQstnHandler(event) {
   const rootid = event.target.getAttribute("data-rootid");
-  editPanelAddNewQstnFormContainer.classList.add("hide");
-  editPanelAddSubCtgryFormContainer.classList.remove("hide");
-  console.log(rootid);
+  const formElement = makeAddQuestionForm(rootid, countryListSelect);
+  event.target.parentElement.appendChild(formElement);
 }
 
 // function postNewRootCategory(event) {
@@ -496,16 +728,16 @@ async function editPanelAddNewQstnHandler(event) {
 //   closeModal();
 // }
 
-async function postNewRootSubCategory(event) {
+async function postNewRootSubCategory(event, ctgryid) {
   event.preventDefault();
 
   // Get form values
   const ctgryTitle = event.target.ctgrytitle.value;
-  const parentid = document.getElementById("add-new-ctgry-id").getAttribute("data-ctgryid"); // Get parent ID
+  const parentid =  ctgryid ||  document.getElementById("add-new-ctgry-id").getAttribute("data-ctgryid"); // Get parent ID
   const loginRequired = event.target.loginrequire.value;
   const description = event.target.description.value;
   const page = event.target.page.value;
-  // const pkgid = event.target.packageid.value; // Assuming packageid is a field
+  const pkgid = event.target?.pkgid?.value || null; // Assuming packageid is a field
 
   // Prevent submission if title is empty
   if (ctgryTitle == "") return;
@@ -517,7 +749,8 @@ async function postNewRootSubCategory(event) {
     page,
     isroot: false,
     child: true,
-    parentid: parentid, // Parent ID
+    parentid: parentid, // Parent ID,
+    pkgid
   };
 
   console.log(ctgryData);
@@ -536,9 +769,14 @@ async function postNewRootSubCategory(event) {
     if (data) {
       alert("Sub-category has been added successfully!");
       console.log("ENtered");
-      
+      event.target.page.value = "";
+      event.target.description.value = "";
+      event.target.loginrequire.value = "";
+      event.target.ctgrytitle.value = ""
 
-      showAddSubCategoryModal();
+      if(!showAddSubCategoryModal(event.target)){
+        appendAddQstnForm(event.target, data.faq_root_id);
+      }
     } else {
       alert("Failed to add sub-category.");
     }
@@ -553,18 +791,66 @@ async function postNewRootSubCategory(event) {
   addNewCtgryFormButton.disabled = false;
 }
 
+async function postNewQuestion(event, ctgryId){
+  event.preventDefault();
+
+    // Get form values
+    const qstnTitle = event.target.qstntitle.value;
+    const ctgryid =  ctgryId ||  document.getElementById("add-new-ctgry-id").getAttribute("data-ctgryid"); // Get parent ID
+    const loginRequired = event.target.loginrequire.value;
+    const description = event.target.description.value;
+    const page = event.target.page.value;
+    const pkgid = event.target?.pkgid?.value || null; // Assuming packageid is a field
+
+    // Prevent submission if title is empty
+    if (qstnTitle == "") return;
+
+    const qstnData = {
+      description,
+      title: qstnTitle,
+      login: loginRequired == "true",
+      page,
+      ctgryid, // Parent ID,
+      pkgid
+    };
+
+    const subBtn = event.target.querySelector("button[type='submit']");
+    subBtn.classList.add("loading");
+    subBtn.style.opacity = 0.5;
+    subBtn.disabled = true;
+    try {
+      const { data } = await postRequest(`${base_URL}/faq/addqstn`, qstnData);
+      console.log(data);
+    } catch (error) {
+      
+    }
+    subBtn.classList.remove("loading");
+    subBtn.style.opacity = 1;
+    subBtn.disabled = false;
+
+}
+
+function appendAddQstnForm(form, ctgryid, countryList){
+  const formElement = makeAddQuestionForm(ctgryid, countryList);
+  form.insertAdjacentElement("afterend",formElement);
+  form.parentElement.removeChild(form);
+}
+
 // Function to show the modal with options to "Add More Sub-Category" or "Add Question"
-function showAddSubCategoryModal() {
+function showAddSubCategoryModal(form) {
   // Show the modal (assuming you have a modal with id `subcategory-modal`)
   const modal = document.getElementById("subcategory-modal");
-  modal.classList.remove("hidden"); // Show modal after the alert is confirmed
+  modal.style.display = 'block'
+  // modal.classList.remove("hidden"); // Show modal after the alert is confirmed
 
   // Handle "Add More Sub-Category" button click
   document
     .getElementById("add-more-subcategory-btn")
     .addEventListener("click", function () {
-      resetForm(); // Reset the form
-      modal.classList.add("hidden"); // Hide modal
+      resetForm(form); // Reset the form
+      // modal.classList.add("hidden"); // Hide modal
+      modal.style.display = 'none';
+      return true;
     });
 
   // Handle "Add Question" button click
@@ -573,19 +859,22 @@ function showAddSubCategoryModal() {
     .addEventListener("click", function () {
       // Logic for adding question goes here
       alert("You chose to add a question for this sub-category.");
-      modal.classList.add("hidden"); // Hide modal
+      // modal.classList.add("hidden"); // Hide modal
+      modal.style.display = 'none';
+      return false;
     });
+
 }
 
 // Function to reset the form and make the parent ID ready for the next submission
-function resetForm() {
+function resetForm(form) {
   // Reset form fields
-  const form = document.getElementById("create-new-ctgry-form-container");
+  // const form = document.getElementById("create-new-ctgry-form-container");
   form.reset(); // Reset all inputs
 
   // Set the parent ID to the value it was before
-  document.getElementById("add-new-ctgry-id").value = ""; // Reset parent ID field
+  // document.getElementById("add-new-ctgry-id").value = ""; // Reset parent ID field
 
   // Focus on the first input field (optional)
-  document.getElementById("ctgrytitle").focus();
+  // document.getElementById("ctgrytitle").focus();
 }

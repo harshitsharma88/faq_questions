@@ -36,14 +36,6 @@ async function storeRootCategory (req, res, next){
     }
 }
 
-async function editCategoryDetails(req, res, next){
-    try {
-        
-    } catch (error) {
-        catchBlock(error, 'Editing Category Details', res);
-    }
-}
-
 async function storeNewQuestion (req, res, next){
     try {
         const { description, title, login, page, ctgryid, pkgid} = req.body;
@@ -138,7 +130,7 @@ async function getCatgryQuestions(req, res, next){
         const paramArray = [
             {name, type : sqlDataTypes[name], value : req.query[name]}
         ];
-        const result = await executeStoredProcedure('Faq_Get_Qstn_Details', paramArray);
+        const result = await executeStoredProcedure('FAQ_GET_QSTN_DETAILS', paramArray);
         return res.status(200).json(result);
     } catch (error) {
         catchBlock(error, 'Getting Category Wise Questions', res)

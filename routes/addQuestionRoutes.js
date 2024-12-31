@@ -2,7 +2,8 @@ const Router = require('express').Router();
 const authenticate = require('../authentication/authStaff');
 const { getActiveRootCategories, getCategoryDetails, getCatgryQuestions, 
         storeRootCategory, storeNewQuestion, getAnswerDetailsByQstnId,
-        getAllRootCategories, editCategoryDetails, getSubCategories, editQuestionDetails} = require('../controllers/get&StoreQuestion');
+        getAllRootCategories, editCategoryDetails, getSubCategories, 
+        editQuestionDetails} = require('../controllers/get&StoreQuestion');
 
 Router.post('/setroot', storeRootCategory);
 
@@ -16,7 +17,7 @@ Router.get('/getctgry', getCategoryDetails);
 
 Router.get('/subcategories',getSubCategories);
 
-Router.get('/getctgryqstn/:id', getCatgryQuestions);
+Router.get('/getqstns', getCatgryQuestions);
 
 Router.get('/getans', getAnswerDetailsByQstnId);
 

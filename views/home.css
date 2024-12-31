@@ -64,6 +64,20 @@ body{
   transform: scale(1); 
 }
 
+.top-btn#add-new-qstn-top-btn{
+  background-color: #008552e0;
+}
+
+.top-btn#add-new-qstn-top-btn:hover{
+  background-color: #008552; 
+  transform: scale(1.02); 
+}
+
+.top-btn#add-new-qstn-top-btn:active{
+  background-color: #004085; 
+  transform: scale(1); 
+}
+
 
 .op-selected{
  background-color: gray;
