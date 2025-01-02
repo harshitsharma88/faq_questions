@@ -243,7 +243,39 @@
                 </div>
             </div>
             <div class="form-container hide" id="add-new-qstn-form-container">
-
+                    <div>
+                        <p class="add-form-heading">Add New Question</p>
+                        <form onsubmit="postNewQuestion(event)">
+                            <p class="form-label">Choose From Category</p>
+                            <div class="multiple-nested-selects" id="nested-new-subctgry-selectdiv">
+                                <select name=""  onchange="makeNestedSubCategoriesSelect(event)">
+                                    <option value="">10:87</option>
+                                    <option value="67">10:47</option>
+                                </select>
+                            </div>
+                            <input type="text" name='categorytitleid' readonly>
+                            <div class="form-mandatory-elements">
+                                <p class="form-label">Enter Title for Question<i class="required">*</i></p>
+                                <input type="text" placeholder="Enter Question Title" name="qstntitle" required>
+                                
+                                <div class="select-container">
+                                    <label class="form-label" for="countries">Choose Package (Optional)</label>
+                                    <select name="countries" onchange="selectedCountryInSubCtgry(event)">
+                                        <option value="" selected disabled>Choose Country..</option>
+                                    </select>
+                                </div>
+                                <input type="text" placeholder="Enter Answer Text" name="answer" required>
+                            </div>
+                            <div class="form-optional-elements">
+                                <label for="description" class="form-label">Add description (If Any)</label>
+                                <input type="text" placeholder="Type here" name="description">
+                    
+                                <label for="page" class="form-label">Attach on Page (Optional)</label>
+                                <input type="text" placeholder="Type here" name="page">
+                            </div>
+                            <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Question</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

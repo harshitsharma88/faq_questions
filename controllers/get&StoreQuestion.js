@@ -38,7 +38,7 @@ async function storeRootCategory (req, res, next){
 
 async function storeNewQuestion (req, res, next){
     try {
-        const { description, title, login, page, ctgryid, pkgid} = req.body;
+        const { description, title, login, page, ctgryid, pkgid, answer} = req.body;
         const userid  = req.user  || 'admin';
         const paramArray = [
             {name : "DESCRIPTION", type : sql.NVarChar(255), value : description},
@@ -51,13 +51,20 @@ async function storeNewQuestion (req, res, next){
             {name : "PKGID", type : sql.Int, value : pkgid}
         ];
         const result = await executeStoredProcedure('FAQ_ADD_QSTN', paramArray);
+        if(req.body.answer){
+            const answerParamArray = [
+                {name : "ANSTEXT", type : sql.NVarChar(255), value : req.body.answer},           
+                {name : "QSTNID", type : sql.Int, value : result[0].faq_qstn_id}
+            ];
+            await executeStoredProcedure('FAQ_ADD_ANSWER_DETAILS', answerParamArray);
+        }
         return res.status(200).json(result[0].faq_qstn_id);
     } catch (error) {
         catchBlock(error, 'Storing Question', res)
     }
 }
 
-async function storeNewAnswerDetails (req, res, next){
+async function storeNewAnswerDetails (req, res, next, addedByFunction){
     try {
         const {answer, qstnid, steps, imageurl, videourl, login} = req.body;
         const userid  = req.user  || 'admin';
@@ -67,12 +74,10 @@ async function storeNewAnswerDetails (req, res, next){
             {name : "HASSTEPS", type : sql.Bit, value : steps},           
             {name : "IMAGEURL", type : sql.NVarChar(1000), value : imageurl},           
             {name : "VIDEOURL", type : sql.NVarChar(1000), value : videourl},
-            {name : "CREATEDBY", type : sql.NVarChar(50), value : userid},
-            {name : "CREATEDDATE", type : sql.DateTime, value : new Date()},
             {name : "LOGIN", type : sql.Bit, value : login}
         ];
         const result = await executeStoredProcedure('FAQ_ADD_ANSWER_DETAILS', paramArray);
-        return res.status(200).json(result[0].faq_qstn_id);
+        return res.status(200).json(result[0]);
     } catch (error) {
         catchBlock(error, 'Storing Question', res)
     }
@@ -126,15 +131,45 @@ async function getSubCategories(req, res, next){
 
 async function getCatgryQuestions(req, res, next){
     try {
+        const qstnAnsObject = [];
         const name =  Object.keys(req.query)[0];
         const paramArray = [
             {name, type : sqlDataTypes[name], value : req.query[name]}
         ];
         const result = await executeStoredProcedure('FAQ_GET_QSTN_DETAILS', paramArray);
-        return res.status(200).json(result);
+        if(Array.isArray(result) && result.length > 0){
+            await Promise.all(result.map(async (qstn)=>{
+                const ansParamArray = [
+                    {name: 'QSTNID', type : sql.Int, value : qstn.faq_qstn_id}  
+                ]
+                const answer = await executeStoredProcedure('FAQ_GET_ANSWERBY_QSTNID', ansParamArray);
+                if(Array.isArray(answer) && answer.length > 0){
+                    qstnAnsObject.push(
+                        {qstn : qstn.faq_qstn_title, ans : answer[0].ans_string}
+                    )
+                }
+            }))
+        };
+        return res.status(200).json(qstnAnsObject);
     } catch (error) {
         catchBlock(error, 'Getting Category Wise Questions', res)
     }
+}
+
+async function getQuestionAndAnswerPairs(req, res, next){
+    try {
+        const qstnAnsObject = [];
+        const name =  Object.keys(req.query)[0];
+        const paramArray = [
+            {name, type : sqlDataTypes[name], value : req.query[name]}
+        ];
+
+        const result = await executeStoredProcedure('FAQ_GET_QSTN_DETAILS', paramArray);
+        
+    } catch (error) {
+        catchBlock(error, 'Getting Question and Answer Pairs', res);
+    }
+
 }
 
 async function getAnswerDetailsByQstnId(req, res, next){
@@ -207,5 +242,6 @@ module.exports = {
     getAllRootCategories,
     editCategoryDetails,
     getSubCategories,
-    editQuestionDetails
+    editQuestionDetails,
+    getQuestionAndAnswerPairs
 }

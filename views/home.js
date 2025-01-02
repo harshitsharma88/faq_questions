@@ -11,6 +11,9 @@ const addQstnFormContainer = document.getElementById(
 const editQstnFormContainer = document.getElementById(
   "edit-qstn-form-container"
 );
+const addnewQstnFormContainer = document.getElementById(
+  "add-new-qstn-form-container"
+);
 const addNewCtgryMoreDetailDiv = document.getElementById(
   "add-ctgry-more-detail"
 );
@@ -274,6 +277,9 @@ function handleNewEditBtn(event){
         editQstnFormContainer.classList.remove("hide");
         break;
       case 'qstn':
+        addnewQstnFormContainer.querySelector("select[name='countries']").innerHTML = countryListSelect;
+        addnewQstnFormContainer.querySelector("select")
+        addnewQstnFormContainer.classList.remove("hide");
         break;
     }
   }
@@ -426,6 +432,39 @@ async function makeSubCategoriesSelect(event) {
   if (Array.isArray(data) && data.length > 0) {
     const select = document.createElement("select");
     select.onchange = makeSubCategoriesSelect;
+    data.forEach((ctgry) => {
+      const option = document.createElement("option");
+      option.value = ctgry.faq_root_id;
+      option.textContent = ctgry.faq_title;
+      select.appendChild(option);
+    });
+    nestedSelectDiv.appendChild(select);
+  }
+}
+
+async function makeNestedSubCategoriesSelect(event) {
+  const ctgryTitleAndId = event.target.closest("form").querySelector("input[name='categorytitleid']");
+  ctgryTitleAndId.setAttribute("data-ctgryid", event.target.value);
+  ctgryTitleAndId.value = event.target[event.target.selectedIndex].textContent;
+  const nestedSelectDiv = event.target.parentElement;
+  const selectElementsArray = Array.from(
+    nestedSelectDiv.querySelectorAll("select")
+  );
+  const indexOf = selectElementsArray.indexOf(event.target);
+  for (let i = indexOf + 1; i < selectElementsArray.length; i++) {
+    nestedSelectDiv.removeChild(selectElementsArray[i]);
+  }
+  const { data } = await getRequest(
+    `${base_URL}/faq/subcategories?parentid=${event.target.value}`
+  );
+  if (Array.isArray(data) && data.length > 0) {
+    const select = document.createElement("select");
+    select.onchange = makeNestedSubCategoriesSelect;
+    const optionDefault = document.createElement("option");
+    optionDefault.selected = true;
+    optionDefault.disabled = true;
+    optionDefault.textContent = "Choose Category..";
+    select.appendChild(optionDefault);
     data.forEach((ctgry) => {
       const option = document.createElement("option");
       option.value = ctgry.faq_root_id;
@@ -789,18 +828,20 @@ async function postNewRootSubCategory(event, ctgryid) {
 }
 
 async function postNewQuestion(event, ctgryId){
-  event.preventDefault();
+    event.preventDefault();
 
     // Get form values
     const qstnTitle = event.target.qstntitle.value;
-    const ctgryid =  ctgryId ||  document.getElementById("add-new-ctgry-id").getAttribute("data-ctgryid"); // Get parent ID
-    const loginRequired = event.target.loginrequire.value;
+    const ctgryid =  ctgryId || event.target.categorytitleid?.getAttribute("data-ctgryid") || document.getElementById("add-new-ctgry-id").getAttribute("data-ctgryid"); // Get parent ID
+    const loginRequired = event.target.loginrequire?.value || "false";
     const description = event.target.description.value;
     const page = event.target.page.value;
     const pkgid = event.target?.pkgid?.value || null; // Assuming packageid is a field
+    const answer = event.target.answer?.value;
 
     // Prevent submission if title is empty
     if (qstnTitle == "") return;
+    if(ctgryid == null && page == "" && pkgid == null ) return alert("Please Provide at least one from Package, Page or Category")
 
     const qstnData = {
       description,
@@ -808,8 +849,11 @@ async function postNewQuestion(event, ctgryId){
       login: loginRequired == "true",
       page,
       ctgryid, // Parent ID,
-      pkgid
+      pkgid,
+      answer
     };
+
+    console.log(qstnData);
 
     const subBtn = event.target.querySelector("button[type='submit']");
     subBtn.classList.add("loading");

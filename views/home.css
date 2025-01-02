@@ -3,15 +3,12 @@ body{
 }
 
 .top-header{
-
-    border-bottom-left-radius: 1em;
-    border-bottom-right-radius: 1em;
     background-color: gray;
-    
     text-align: start;
     color: beige;
     font-weight: 800;
     padding: 15px 25px;
+    border-radius: 0 0 10px 10px;
 }
 
 .hide{
