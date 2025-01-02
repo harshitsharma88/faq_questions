@@ -56,7 +56,9 @@ async function storeNewQuestion (req, res, next){
                 {name : "ANSTEXT", type : sql.NVarChar(255), value : req.body.answer},           
                 {name : "QSTNID", type : sql.Int, value : result[0].faq_qstn_id},
                 {name : "VIDEOURL", type : sql.NVarChar(1000), value : videourl},
-                {name : "IMAGEURL", type : sql.NVarChar(1000), value : imageurl}
+                {name : "IMAGEURL", type : sql.NVarChar(1000), value : imageurl},
+                {name : "CREATEDDATE", type : sql.DateTime, value : new Date()},
+                {name : "CREATEDBY", type : sql.NVarChar(50), value : userid}
             ];
             await executeStoredProcedure('FAQ_ADD_ANSWER_DETAILS', answerParamArray);
         }
@@ -76,7 +78,9 @@ async function storeNewAnswerDetails (req, res, next, addedByFunction){
             {name : "HASSTEPS", type : sql.Bit, value : steps},           
             {name : "IMAGEURL", type : sql.NVarChar(1000), value : imageurl},           
             {name : "VIDEOURL", type : sql.NVarChar(1000), value : videourl},
-            {name : "LOGIN", type : sql.Bit, value : login}
+            {name : "LOGIN", type : sql.Bit, value : login},
+            {name : "CREATEDDATE", type : sql.DateTime, value : new Date()},
+            {name : "CREATEDBY", type : sql.NVarChar(50), value : userid}
         ];
         const result = await executeStoredProcedure('FAQ_ADD_ANSWER_DETAILS', paramArray);
         return res.status(200).json(result[0]);
@@ -131,6 +135,7 @@ async function getSubCategories(req, res, next){
     }
 }
 
+// Nested Loop Method for getting answer for every question 
 async function getCatgryQuestions(req, res, next){
     try {
         const qstnAnsObject = [];
@@ -158,20 +163,37 @@ async function getCatgryQuestions(req, res, next){
     }
 }
 
+// async function getQuestionAndAnswerPairs(req, res, next){
+//     try {
+//         const qstnAnsObject = [];
+//         const name =  Object.keys(req.query)[0];
+//         const paramArray = [
+//             {name, type : sqlDataTypes[name], value : req.query[name]}
+//         ];
+//         const result = await executeStoredProcedure('FAQ_GET_QSTN_ANS_PAIR', req.query.length > 0 ? paramArray : null);
+//         console.log(result.length);
+//         return res.status(200).json(result);
+//     } catch (error) {
+//         catchBlock(error, 'Getting Question and Answer Pairs', res);
+//     }
+
+// }
+
 async function getQuestionAndAnswerPairs(req, res, next){
     try {
         const qstnAnsObject = [];
         const name =  Object.keys(req.query)[0];
+        console.log(name,"NAME");
         const paramArray = [
             {name, type : sqlDataTypes[name], value : req.query[name]}
         ];
-        const result = await executeStoredProcedure('FAQ_GET_QSTN_ANS_PAIR', paramArray);
-        console.log(result);
-        return res.status(200).json(result);
+        const result = await executeStoredProcedure('FAQ_GET_QSTN_DETAILS', name ? paramArray : null);
+        console.log(result.length);
+        console.log(result)
+        return res.status(200).json({result});
     } catch (error) {
         catchBlock(error, 'Getting Question and Answer Pairs', res);
     }
-
 }
 
 async function getAnswerDetailsByQstnId(req, res, next){
@@ -230,6 +252,14 @@ async function editQuestionDetails(req, res, next){
         return res.status(200).send(result[0]);  
     } catch (error) {
         catchBlock();
+    }
+}
+
+async function editAnswerDetails(req, res, next){
+    try {
+        const {qstnid, title, answer} = req.body; 
+    } catch (error) {
+        catchBlock(error, "Editing Answer Details", res)
     }
 }
 

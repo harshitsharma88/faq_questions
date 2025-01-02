@@ -23,7 +23,7 @@ Router.get('/getctgry', getCategoryDetails);
 
 Router.get('/subcategories',getSubCategories);
 
-Router.get('/getqstns', getCatgryQuestions);
+Router.get('/getqstns', getCatgryQuestions); // looping method
 
 Router.get("/getqstnans", getQuestionAndAnswerPairs);
 
