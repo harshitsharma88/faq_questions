@@ -38,7 +38,7 @@ async function storeRootCategory (req, res, next){
 
 async function storeNewQuestion (req, res, next){
     try {
-        const { description, title, login, page, ctgryid, pkgid, answer} = req.body;
+        const { description, title, login, page, ctgryid, pkgid, answer, imageurl, videourl} = req.body;
         const userid  = req.user  || 'admin';
         const paramArray = [
             {name : "DESCRIPTION", type : sql.NVarChar(255), value : description},
@@ -54,7 +54,9 @@ async function storeNewQuestion (req, res, next){
         if(req.body.answer){
             const answerParamArray = [
                 {name : "ANSTEXT", type : sql.NVarChar(255), value : req.body.answer},           
-                {name : "QSTNID", type : sql.Int, value : result[0].faq_qstn_id}
+                {name : "QSTNID", type : sql.Int, value : result[0].faq_qstn_id},
+                {name : "VIDEOURL", type : sql.NVarChar(1000), value : videourl},
+                {name : "IMAGEURL", type : sql.NVarChar(1000), value : imageurl}
             ];
             await executeStoredProcedure('FAQ_ADD_ANSWER_DETAILS', answerParamArray);
         }
@@ -163,9 +165,9 @@ async function getQuestionAndAnswerPairs(req, res, next){
         const paramArray = [
             {name, type : sqlDataTypes[name], value : req.query[name]}
         ];
-
-        const result = await executeStoredProcedure('FAQ_GET_QSTN_DETAILS', paramArray);
-        
+        const result = await executeStoredProcedure('FAQ_GET_QSTN_ANS_PAIR', paramArray);
+        console.log(result);
+        return res.status(200).json(result);
     } catch (error) {
         catchBlock(error, 'Getting Question and Answer Pairs', res);
     }

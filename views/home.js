@@ -108,6 +108,16 @@ async function postRequest(url, data) {
   }
 }
 
+function isValidURL(url){
+  try {
+    if(url == "")return true;
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false
+  }
+}
+
 function makeAddSubCategoryForm(parentId, countryListOptions){
   const formElement = document.createElement("form");
   formElement.onsubmit = (event)=>{
@@ -838,10 +848,13 @@ async function postNewQuestion(event, ctgryId){
     const page = event.target.page.value;
     const pkgid = event.target?.pkgid?.value || null; // Assuming packageid is a field
     const answer = event.target.answer?.value;
+    const imageurl = event.target.image?.value;
+    const videourl = event.target.video?.value;
 
     // Prevent submission if title is empty
     if (qstnTitle == "") return;
-    if(ctgryid == null && page == "" && pkgid == null ) return alert("Please Provide at least one from Package, Page or Category")
+    if(ctgryid == null && page == "" && pkgid == null ) return alert("Please Provide at least one from Package, Page or Category");
+    if(!isValidURL(imageurl) || !isValidURL(videourl)) return alert("Please enter a valid URL");
 
     const qstnData = {
       description,
@@ -850,7 +863,9 @@ async function postNewQuestion(event, ctgryId){
       page,
       ctgryid, // Parent ID,
       pkgid,
-      answer
+      answer,
+      imageurl,
+      videourl
     };
 
     console.log(qstnData);
