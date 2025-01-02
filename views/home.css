@@ -1,4 +1,5 @@
 body{
+  margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
 }
 
@@ -98,9 +99,8 @@ input[type = "text"]{
     align-items: center;
     gap: 2em;
     border-radius: 1em;
-    box-shadow: 0 1px 4px rgb(128, 111, 111);
+   
     height: 70vh;
-    margin: 0.5em;
     align-self: center;
     overflow-y: scroll;
     scrollbar-width: thin;
@@ -116,6 +116,7 @@ input[type = "text"]{
   font-size: 1.8rem;
   font-weight: bold;
   color: #333;
+  margin: 0;
   text-align: center;
   margin-bottom: 20px;
 }
@@ -131,16 +132,18 @@ input[type = "text"]{
 }
 
 /* Form Labels and Inputs */
-.form-mandatory-elements,
+/* .form-mandatory-elements,
 .form-optional-elements {
   margin-bottom: 20px;
-}
+} */
 
 /* Label Styling */
 .form-label {
   font-weight: bold;
   font-size: 1rem;
+  text-align: start;
   color: #333;
+  margin: 0;
   margin-bottom: 5px;
 }
 
@@ -246,9 +249,9 @@ select{
 
 input[type = 'text']{
   padding: 10px 14px;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 0.7px solid gray;
-    width: 20vw;
+    width: 26vw;
 }
 
 #selectedctgrytitle{
@@ -471,7 +474,7 @@ select {
 /* Flexbox for Form Layout */
 .select-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 5px;
 }
 
@@ -574,4 +577,154 @@ select {
 
 .add-question-btn:hover {
   background-color: #1976D2;
+}
+.custom-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 600px;
+  padding: 20px;
+
+  border-radius: 8px;
+
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.custom-form .multiple-nested-selects {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  position: relative;
+}
+
+.custom-form .multiple-nested-selects select {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.custom-form .multiple-nested-selects select:focus {
+  border-color: #238a64;
+  outline: none;
+}
+
+.custom-form .loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  border: 3px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 3px solid #238a64;
+  animation: spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.custom-form button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #6b56c8;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-form button:hover {
+  background-color: #46009b;
+}
+
+.custom-form button:disabled {
+  background-color: #bbb;
+  cursor: not-allowed;
+}
+#nested-new-subctgry-selectdiv {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#nested-new-subctgry-selectdiv select {
+  flex: 1 1 48%;
+  padding: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  #nested-new-subctgry-selectdiv {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  #nested-new-subctgry-selectdiv select {
+    flex: 1 1 100%; /* On smaller screens, make each select take up the full width */
+  }
+}
+.description-label, .page-label, .image-label, .video-label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.description-input, .page-input, .image-input, .video-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+}
+.form-optional-elements > div {
+  display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+}
+
+.description-label, .page-label, .image-label, .video-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.description-input, .page-input, .image-input, .video-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+.new-part-seelcted{
+ flex: 1;
+}
+.all-main-form{
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgb(128, 111, 111)
+}
+.top-container{
+  display: flex;
+      gap: 2rem;
+      padding: 10px;
+}
+.top-btn-container{
+  display: flex
+  ;
+      gap: 1rem;
+      flex-direction: column;
+}
+.title-part{
+  display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
 }

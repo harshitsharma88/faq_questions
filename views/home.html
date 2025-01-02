@@ -12,7 +12,7 @@
     <p class="top-header">Frequently Asked Questions(FAQs)</p>
     <div class="top-container">
         <div class="top-btn-container" onclick="handleNewEditBtn(event,'add')">
-            <button class="top-btn" id="add-qstn-top-btn" data-action="add" >Add New Category</button>
+            <button class="top-btn" id="add-qstn-top-btn" data-action="add">Add New Category</button>
             <button class="top-btn" id="edit-qstn-top-btn" data-action="edit">Edit or Update Category</button>
             <button class="top-btn" id="add-new-qstn-top-btn" data-action="qstn">Add New Question</button>
             <button class="top-btn" id="edit-new-qstn-top-btn" data-action="qstn">Edit Question</button>
@@ -20,29 +20,31 @@
         <div class="form-group-container" id="form-group-container">
             <div class="root-category-modal" id="subcategory-modal" style="display:none;">
                 <div class="modal-content">
-                    <button  id="add-more-subcategory-btn" class="add-question-btn">Add More Sub-Category</button>
+                    <button id="add-more-subcategory-btn" class="add-question-btn">Add More Sub-Category</button>
                     <button class="choose-sub-category-btn" id="add-question-btn">Add Question</button>
                 </div>
             </div>
             <div class="form-container hide" id="add-ctgry-form-container">
-              
+
                 <div id="create-new-ctgry-form-container">
                     <p class="add-form-heading">Add New Root Category</p>
                     <form onsubmit="postNewRootCategory(event)" id="addctgryform">
                         <div class="form-mandatory-elements">
                             <p class="form-label">Enter Title for Root Category<i class="required">*</i></p>
-                            <input type="text" placeholder="Enter Category Title" id="add-new-ctgry-input" name="ctgrytitle" required>
-                
+                            <input type="text" placeholder="Enter Category Title" id="add-new-ctgry-input"
+                                name="ctgrytitle" required>
+
                             <div class="select-container">
                                 <label class="form-label" for="countries">Choose Package (Optional)</label>
-                                <select name="countries" id="country-list-adding-new-root" onchange="selectedCountryInNewRoot(event)">
+                                <select name="countries" id="country-list-adding-new-root"
+                                    onchange="selectedCountryInNewRoot(event)">
                                     <option value="" selected disabled>Choose Country..</option>
                                 </select>
                                 <select name="packageid" class="hide" id="package-list-for-country">
                                     <option value="" selected disabled>Choose Package..</option>
                                 </select>
                             </div>
-                
+
                             <div class="login-required-radio">
                                 <p class="form-label">Is Login Required<i class="required">*</i></p>
                                 <label>
@@ -53,19 +55,19 @@
                                 </label>
                             </div>
                         </div>
-                
+
                         <div class="form-optional-elements">
                             <label for="description" class="form-label">Add description (If Any)</label>
                             <input type="text" placeholder="Type here" name="description">
-                
+
                             <label for="page" class="form-label">Attach on Page (Optional)</label>
                             <input type="text" placeholder="Type here" name="page">
                         </div>
-                
+
                         <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add</button>
                     </form>
                 </div>
-                
+
                 <!-- Modal Structure with Unique Class -->
                 <!-- <div id="confirmation-modal" class="root-category-modal">
                     <div class="modal-content">
@@ -74,14 +76,14 @@
                         <button class="add-question-btn" onclick="addQuestion()">Add Question</button>
                     </div>
                 </div> -->
-                
+
 
                 <!-- //// -->
                 <div class="multiple-nested-selects" id="nested-new-subctgry-selectdiv">
                 </div>
                 <input type="text" value="" class="parentid" id="add-new-ctgry-id" readonly>
                 <div class="" id="add-ctgry-more-detail">
-                    
+
                     <div class="" id="add-new-ctgry-subctgry">
                         <form onsubmit="postNewRootSubCategory(event)" class="">
                             <div class="form-manadatory-elements">
@@ -135,7 +137,7 @@
                             <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Sub-Category</button>
                         </form>
                     </div>
-                    
+
                     <div class="hide" id="add-new-ctgry-question">
                         <form action="">
                             <label for="ctgry-title">Root Category Title</label>
@@ -244,42 +246,59 @@
                 </div>
             </div>
             <div class="form-container hide" id="add-new-qstn-form-container">
-                    <div>
-                        <p class="add-form-heading">Add New Question</p>
-                        <form onsubmit="postNewQuestion(event)">
-                            <p class="form-label">Choose From Category</p>
-                            <div class="multiple-nested-selects" id="nested-new-subctgry-selectdiv">
-                                <select name=""  onchange="makeNestedSubCategoriesSelect(event)">
-                                    <option value="">10:87</option>
-                                    <option value="67">10:47</option>
-                                </select>
-                            </div>
-                            <input type="text" name='categorytitleid' readonly>
-                            <div class="form-mandatory-elements">
+                <div class="all-main-form">
+                    <p class="add-form-heading">Add New Question</p>
+                    <form class="custom-form" onsubmit="postNewQuestion(event)">
+                        <p class="form-label">Choose From Category</p>
+                        <div class="multiple-nested-selects" id="nested-new-subctgry-selectdiv">
+                            <select name="" onchange="makeNestedSubCategoriesSelect(event)">
+                                <option value="">10:87</option>
+                                <option value="67">10:47</option>
+                            </select>
+                        </div>
+                        <input type="text" name='categorytitleid' readonly>
+                        <div class="form-mandatory-elements">
+                            <div class="title-part">
                                 <p class="form-label">Enter Title for Question<i class="required">*</i></p>
                                 <input type="text" placeholder="Enter Question Title" name="qstntitle" required>
-                                
-                                <div class="select-container">
-                                    <label class="form-label" for="countries">Choose Package (Optional)</label>
+                            </div>
+
+                            <div class="select-container">
+                                <div class="new-part-seelcted"> <label class="form-label" for="countries">Choose Package
+                                        (Optional)</label>
                                     <select name="countries" onchange="selectedCountryInSubCtgry(event)">
                                         <option value="" selected disabled>Choose Country..</option>
                                     </select>
                                 </div>
                                 <input type="text" placeholder="Enter Answer Text" name="answer" required>
                             </div>
-                            <div class="form-optional-elements">
-                                <label for="description" class="form-label">Add description (If Any)</label>
-                                <input type="text" placeholder="Type here" name="description">
-                    
-                                <label for="page" class="form-label">Attach on Page (Optional)</label>
-                                <input type="text" placeholder="Type here" name="page">
-                                <label for="image" class="form-label">Give Image Link</label>
-                                <input type="text" placeholder="Paste here" name="image">
-                                <label for="video" class="form-label">Give Video Link</label>
-                                <input type="text" placeholder="Paste here" name="video">
+                        </div>
+                        <div class="form-optional-elements">
+                            <div class="description-container">
+                                <label for="description" class="description-label">Add description (If Any)</label>
+                                <input type="text" placeholder="Type here" name="description" class="description-input">
                             </div>
-                            <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Question</button>
+
+                            <div class="page-container">
+                                <label for="page" class="page-label">Attach on Page (Optional)</label>
+                                <input type="text" placeholder="Type here" name="page" class="page-input">
+                            </div>
+
+                            <div class="image-container">
+                                <label for="image" class="image-label">Give Image Link</label>
+                                <input type="text" placeholder="Paste here" name="image" class="image-input">
+                            </div>
+
+                            <div class="video-container">
+                                <label for="video" class="video-label">Give Video Link</label>
+                                <input type="text" placeholder="Paste here" name="video" class="video-input">
+                            </div>
+                        </div>
+
+
+                        <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Question</button>
                     </form>
+
                 </div>
             </div>
         </div>
