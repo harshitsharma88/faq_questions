@@ -36,6 +36,7 @@ async function getFeedbackQuestions(req, res, next){
 
 async function storeNewFeedbackQuestion(req, res, next){
     try {
+        console.log(req.body);
         const {title, page} = req.body;
         const userid = req.user || "admin";
         const paramArray = [
@@ -54,25 +55,26 @@ async function storeNewFeedbackQuestion(req, res, next){
 
 async function storeAgentResponse(req, res, next){
     try {
-        const {agentid, responsetext, rating, page, qstntitle, qstnid} = req.body;
-        const questionIncrement = await executeStoredProcedure("FEEDBACK_UPDATE_QUESTION_DETAILS",incrementSPArray);
-        const paramArray = [
-            {name : "AGENTID", type : sql.NVarChar(50), value : agentid},
-            {name : "QSTNID", type : sql.Int, value : qstnid},
-            {name : "CREATEDAT", type : sql.DateTime, value : new Date()},
-            {name : "RESPONSETEXT", type : sql.NVarChar(1000), value : responsetext},
-            {name : "QSTNTITLE", type : sql.NVarChar(1000), value : qstntitle},
-            {name : "RATING", type : sql.Int, value : rating},
-            {name : "PAGE", type : sql.NVarChar(100), value : page}
-        ]
+        const {agentid, responsetext, rating, qstnid} = req.body;
         const incrementSPArray = [
             {name : "INCREASEVALUE", type : sql.Bit, value :1},
             {name : "QSTIND", type : sql.Int, value :qstnid}
         ]
-        
-        const result = await executeStoredProcedure("FEEDBACK_STORE_AGENT_RESPONSE", paramArray);
-        console.log(questionIncrement);
-        return res.status(200).json(result);
+        const questionIncrement = await executeStoredProcedure("FEEDBACK_UPDATE_QUESTION_DETAILS",incrementSPArray);
+        if(Array.isArray(questionIncrement) && questionIncrement.length > 0){
+            const paramArray = [
+                {name : "AGENTID", type : sql.NVarChar(50), value : agentid},
+                {name : "QSTNID", type : sql.Int, value : qstnid},
+                {name : "CREATEDAT", type : sql.DateTime, value : new Date()},
+                {name : "RESPONSETEXT", type : sql.NVarChar(1000), value : responsetext},
+                {name : "QSTNTITLE", type : sql.NVarChar(1000), value : questionIncrement[0].feed_qstn_title},
+                {name : "RATING", type : sql.Int, value : rating},
+                {name : "PAGE", type : sql.NVarChar(100), value : questionIncrement[0].page}
+            ]            
+            const result = await executeStoredProcedure("FEEDBACK_STORE_AGENT_RESPONSE", paramArray);
+            return res.status(200).json(result);
+        }
+        return res.status(200).json("Not Stored");
     } catch (error) {
         catchBlock(error, "Storing Agent Response", res)
     }
