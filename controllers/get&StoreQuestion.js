@@ -12,6 +12,15 @@ const sqlDataTypes = {
     'STATUS' : sql.Bit
 } 
 
+async function getCategoryOrQuestion(req, res, next){
+    try {
+        console.log(req.param);
+        res.status(200).json(req.param);
+    } catch (error) {
+        catchBlock(error, "Getting Category Or Question", res)
+    }
+}
+
 async function storeRootCategory (req, res, next){
     try {
         const { description, title, login, page, isroot, child, parentid, pkgid} = req.body;
@@ -181,15 +190,17 @@ async function getCatgryQuestions(req, res, next){
 
 async function getQuestionAndAnswerPairs(req, res, next){
     try {
+        // Will Accept queries in PAGE & PKGID & CTGRYID & QSTNID
         const qstnAnsObject = [];
-        const name =  Object.keys(req.query)[0];
-        console.log(name,"NAME");
-        const paramArray = [
-            {name, type : sqlDataTypes[name], value : req.query[name]}
-        ];
-        const result = await executeStoredProcedure('FAQ_GET_QSTN_DETAILS', name ? paramArray : null);
+        const queriesArray =  Object.keys(req.query);
+        const paramArray = [];
+        queriesArray.forEach(key=>{
+            paramArray.push(
+                {name : key, type : sqlDataTypes[key], value : req.query[key]}
+            )
+        });
+        const result = await executeStoredProcedure('FAQ_GET_QSTN_DETAILS', paramArray);
         console.log(result.length);
-        console.log(result)
         return res.status(200).json({result});
     } catch (error) {
         catchBlock(error, 'Getting Question and Answer Pairs', res);
@@ -257,11 +268,25 @@ async function editQuestionDetails(req, res, next){
 
 async function editAnswerDetails(req, res, next){
     try {
-        const {qstnid, title, answer} = req.body; 
+        const {qstnid, answertext, status, imageurl, videourl} = req.body;
+        const userid = req.user || 'admin';
+        const paramArray = [
+            {name : "STATUS", type : sql.Bit, value : status},           
+            {name : "QSTNID", type : sql.Int, value : qstnid},
+            {name : "UPDATEDBY", type : sql.NVarChar(50), value : userid},
+            {name : "UPDATEDON", type : sql.DateTime, value : new Date()},
+            {name : "ANSTEXT", type : sql.NVarChar(1000), value : answertext},
+            {name : "IMAGEURL", type : sql.NVarChar(1000), value : imageurl},
+            {name : "VIDEOURL", type : sql.NVarChar(1000), value : videourl},
+        ];
+        const result = await executeStoredProcedure("TBL_FAQ_ANSWER_DETAILS", paramArray);
+        return res.status(200).json(result);
     } catch (error) {
         catchBlock(error, "Editing Answer Details", res)
     }
 }
+
+
 
 module.exports = {
     getActiveRootCategories,
@@ -275,5 +300,6 @@ module.exports = {
     editCategoryDetails,
     getSubCategories,
     editQuestionDetails,
-    getQuestionAndAnswerPairs
+    getQuestionAndAnswerPairs,
+    getCategoryOrQuestion
 }
