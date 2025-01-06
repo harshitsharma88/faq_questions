@@ -33,49 +33,6 @@ body{
 }
 
 
-.top-btn#add-qstn-top-btn {
-  background-color: #28a745; 
-}
-
-.top-btn#add-qstn-top-btn:hover {
-  background-color: #218838; 
-  transform: scale(1.02); 
-}
-
-.top-btn#add-qstn-top-btn:active {
-  background-color: #1e7e34; 
-  transform: scale(1); 
-}
-
-
-.top-btn#edit-qstn-top-btn {
-  background-color: #007bff;
-}
-
-.top-btn#edit-qstn-top-btn:hover {
-  background-color: #0056b3; 
-  transform: scale(1.02); 
-}
-
-.top-btn#edit-qstn-top-btn:active {
-  background-color: #004085; 
-  transform: scale(1); 
-}
-
-.top-btn#add-new-qstn-top-btn{
-  background-color: #008552e0;
-}
-
-.top-btn#add-new-qstn-top-btn:hover{
-  background-color: #008552; 
-  transform: scale(1.02); 
-}
-
-.top-btn#add-new-qstn-top-btn:active{
-  background-color: #004085; 
-  transform: scale(1); 
-}
-
 
 .op-selected{
  background-color: gray;
@@ -727,4 +684,106 @@ select {
       align-items: center;
       justify-content: space-between;
       margin-bottom: 15px;
+}
+.top-btn {
+  padding: 0.8em 1.5em;
+  border: 1px solid #ccc;
+  border-radius: 0.6em;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  background-color: white;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  text-align: center;
+  gap: 0.5em;  /* Space between icon and text */
+}
+
+.top-btn i {
+  font-size: 1.2em; /* Icon size */
+}
+
+.top-btn:hover {
+  background-color: #f8f9fa;
+  border-color: #007bff;
+  color: white;
+}
+
+.top-btn:active {
+  background-color: #e2e6ea;
+}
+
+.top-btn#add-qstn-top-btn {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+.top-btn#edit-qstn-top-btn {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.top-btn#add-new-qstn-top-btn {
+  color: #008552e0;
+  border-color: #008552e0;
+}
+
+.top-btn#edit-new-qstn-top-btn {
+  color: #ffc107;
+  border-color: #ffc107;
+}
+.top-btn#for-feedback-btn {
+  color: #982dbf;
+  border-color: #c551dd;
+}
+.page-select-container {
+  position: relative;
+  align-items: baseline;
+  display: flex;
+  justify-content: center;
+  margin: 14px 10px;
+  border: 1px solid #ccc;
+  padding: 4px 15px;
+  flex: 1;
+  border-radius: 10px;
+  background-color: #fff;
+  overflow: hidden;
+  width: 100%;
+}
+
+.page-select {
+  width: 100%;
+  padding: 8px 30px 8px 12px; /* Padding to make space for the icon */
+  font-size: 14px;
+  border: none;
+  margin: 0;
+  background: none;
+  border-radius: 4px;
+}
+
+.search-icon-container {
+  width: 100%;
+    font-size: 14px;
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 0px;
+    flex: 1;
+
+    border-radius: 10px;
+    background-color: #fff;
+
+}
+
+.search-icon {
+  font-size: 20px;
+  top: 16px;
+  padding: 8px;
+  border-radius: 8px;
+  background: royalblue;
+  color: #ffffff;
 }

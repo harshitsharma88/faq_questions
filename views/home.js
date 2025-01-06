@@ -1,12 +1,15 @@
 const main_url = "https://apidev.cultureholidays.com/api";
 let base_URL = "";
 base_URL = "https://horribly-smashing-humpback.ngrok-free.app";
-base_URL = "http://localhost:3000";
+// base_URL = "http://localhost:3000";
 
 const addNewQstnBtn = document.getElementById("add-qstn-top-btn");
 const editQstnBtn = document.getElementById("edit-qstn-top-btn");
 const addQstnFormContainer = document.getElementById(
   "add-ctgry-form-container"
+);
+const feedbackformcontainer = document.getElementById(
+  "for-feedback-form-container"
 );
 const editQstnFormContainer = document.getElementById(
   "edit-qstn-form-container"
@@ -291,6 +294,8 @@ function handleNewEditBtn(event){
         addnewQstnFormContainer.querySelector("select")
         addnewQstnFormContainer.classList.remove("hide");
         break;
+        case 'feedback':
+          feedbackformcontainer.classList.remove("hide")
     }
   }
 }
@@ -934,3 +939,17 @@ function resetForm(form) {
   // Focus on the first input field (optional)
   // document.getElementById("ctgrytitle").focus();
 }
+
+
+async function storeNewFeedbackForm(event) {
+  event.preventDefault();
+  const page = event.target.feedpage.value;
+  const title = event.target.feedquestion.value;
+  const submitBtn = event.target.querySelector("button[type='submit']")
+  submitBtn.classList.add("loading")
+  const {data} = await postRequest(`${base_URL}/feedback/storeqstn`,{title, page});
+  submitBtn.classList.remove("loading");
+  console.log(data);
+}
+
+// console.log(location.pathname.replace("/","").split(".")[0])

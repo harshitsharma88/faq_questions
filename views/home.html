@@ -6,17 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQs</title>
     <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 
 <body>
     <p class="top-header">Frequently Asked Questions(FAQs)</p>
     <div class="top-container">
-        <div class="top-btn-container" onclick="handleNewEditBtn(event,'add')">
-            <button class="top-btn" id="add-qstn-top-btn" data-action="add">Add New Category</button>
-            <button class="top-btn" id="edit-qstn-top-btn" data-action="edit">Edit or Update Category</button>
-            <button class="top-btn" id="add-new-qstn-top-btn" data-action="qstn">Add New Question</button>
-            <button class="top-btn" id="edit-new-qstn-top-btn" data-action="qstn">Edit Question</button>
+        <div class="top-btn-container" onclick="handleNewEditBtn(event, 'add')">
+            <button class="top-btn" id="add-qstn-top-btn" data-action="add">
+                <i class="fas fa-plus"></i> Add New Category
+            </button>
+            <button class="top-btn" id="edit-qstn-top-btn" data-action="edit">
+                <i class="fas fa-edit"></i> Edit or Update Category
+            </button>
+            <button class="top-btn" id="add-new-qstn-top-btn" data-action="qstn">
+                <i class="fas fa-question"></i> Add New Question
+            </button>
+            <button class="top-btn" id="edit-new-qstn-top-btn" data-action="qstn">
+                <i class="fas fa-pencil-alt"></i> Edit Question
+            </button>
+            <!-- Last button with unique ID -->
+            <button class="top-btn" id="for-feedback-btn" data-action="feedback">
+                <i class="fas fa-comment-alt"></i> For Feedback
+            </button>
         </div>
+        
         <div class="form-group-container" id="form-group-container">
             <div class="root-category-modal" id="subcategory-modal" style="display:none;">
                 <div class="modal-content">
@@ -300,6 +315,36 @@
                     </form>
 
                 </div>
+            </div>
+            <div class="form-container hide" id="for-feedback-form-container">
+                <div class="all-main-form">
+                    <p class="add-form-heading">Add New Question</p>
+                    <form class="custom-form" onsubmit="storeNewFeedbackForm(event)">
+                       
+                        <!-- Page Dropdown with Search Icon on Right -->
+                        <div class="form-optional-elements">
+                            <div class="page-container">
+                                <label for="page" class="page-label">Select Page (Optional)</label>
+                                <div class="page-select-container">
+                                    <select id="page-select" name="feedpage" class="page-select" placeholder="Search for a Page">
+                                        <option value="0"  selected>Search for a Page...</option>
+                                        <option value="Zodiac"  >Zodiac</option>
+                                    </select>
+                                    <div class="search-icon-container">
+                                        <i class="fas fa-search search-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="video-container">
+                                <label for="Question" class="Question-label">Add a Question</label>
+                                <input type="text" placeholder="type here" name="feedquestion" class="Question-input">
+                            </div>
+                        </div>
+                
+                        <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Question</button>
+                    </form>
+                </div>
+                
             </div>
         </div>
     </div>
