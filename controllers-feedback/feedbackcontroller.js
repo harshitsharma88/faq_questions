@@ -10,7 +10,6 @@ async function getFeedbackQuestions(req, res, next){
             {name : "PAGE" , type : sql.NVarChar(100), value : page}
         ];
         const result = await executeStoredProcedure("FEEDBACK_GET_UNREPLIED_QUESTION_BY_PAGE", paramArray);
-        console.log(result);
         return res.status(200).json(result)
         // // const agentid = "CHAGT123";
         // // const page = "Zodiac";
@@ -43,13 +42,14 @@ async function getFeedbackQuestions(req, res, next){
 
 async function storeNewFeedbackQuestion(req, res, next){
     try {
-        const {title, page} = req.body;
+        const {title, page, response_options} = req.body;
         const userid = req.user || "admin";
         const paramArray = [
             {name : "TITLE", type: sql.NVarChar(1000), value : title},
             {name : "PAGE", type: sql.NVarChar(100), value : page},
             {name : "CREATEDBY", type: sql.NVarChar(50), value : userid},
             {name : "CREATEDAT", type: sql.DateTime, value : new Date()},
+            {name : "RESPONSEOPTION", type : sql.NVarChar(1000), value : JSON.stringify(response_options || [])}
         ]
         const result = await executeStoredProcedure("FEEDBACK_STORE_NEW_QUESTION", paramArray);
         return res.status(200).json(result);
@@ -60,14 +60,15 @@ async function storeNewFeedbackQuestion(req, res, next){
 
 async function storeAgentResponse(req, res, next){
     try {
-        const {agentid, responsetext, rating, qstnid} = req.body;
+        const {agentid, responsetext, rating, qstnid, page} = req.body;
             const paramArray = [
                 {name : "AGENTID", type : sql.NVarChar(50), value : agentid},
                 {name : "QSTNID", type : sql.Int, value : qstnid},
                 {name : "CREATEDAT", type : sql.DateTime, value : new Date()},
                 {name : "RESPONSETEXT", type : sql.NVarChar(1000), value : responsetext},
-                {name : "RATING", type : sql.Int, value : rating}
-            ]            
+                {name : "RATING", type : sql.Int, value : rating},
+                {name : "PAGENAME", type : sql.VarChar(50), value : page}
+            ];            
             const result = await executeStoredProcedure("FEEDBACK_STORE_AGENT_RESPONSE", paramArray);
             return res.status(200).json(result);
     } catch (error) {

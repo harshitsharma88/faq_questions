@@ -12,11 +12,11 @@ app.use(cors({ origin: '*'}));
 const homeRoutes = require('./routes/homeRoute');
 const faqRoutes = require('./routes/addQuestionRoutes');
 const deleteRoutes = require("./routes/deleteRoutes");
-const feedbackRoutes = require("./routes/feedbackRoutes")
+const feedbackRoutes = require("./routes/feedbackRoutes");
 
 app.use('/delete', deleteRoutes)
 app.use('/faq', faqRoutes);
-app.use("/feedback", feedbackRoutes)
+app.use("/feedback", feedbackRoutes);
 app.use('/', homeRoutes);
 
 app.use(cors({ origin: '*'}));
