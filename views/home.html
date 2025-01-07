@@ -319,30 +319,55 @@
             <div class="form-container hide" id="for-feedback-form-container">
                 <div class="all-main-form">
                     <p class="add-form-heading">Add New Question</p>
-                    <form class="custom-form" onsubmit="storeNewFeedbackForm(event)">
-                       
-                        <!-- Page Dropdown with Search Icon on Right -->
-                        <div class="form-optional-elements">
-                            <div class="page-container">
-                                <label for="page" class="page-label">Select Page (Optional)</label>
-                                <div class="page-select-container">
-                                    <select id="page-select" name="feedpage" class="page-select" placeholder="Search for a Page">
-                                        <option value="0"  selected>Search for a Page...</option>
-                                        <option value="Zodiac"  >Zodiac</option>
+                    <form class="custom-form" id="feedbackForm">
+                        <div class="feedback-form-container">
+                            <div class="feedback-page-section">
+                                <label class="feedback-page-label">Select Page (Optional)</label>
+                                <div class="feedback-page-select-wrapper">
+                                    <select class="feedback-page-select" name="feedpage">
+                                        <option value="0">Search for a Page...</option>
+                                        <option value="Zodiac">Zodiac</option>
                                     </select>
-                                    <div class="search-icon-container">
-                                        <i class="fas fa-search search-icon"></i>
+                                    <span class="feedback-search-icon">🔍</span>
+                                </div>
+                            </div>
+                    
+                            <div class="feedback-question-section">
+                                <label class="feedback-question-label">Add a Question</label>
+                                <input type="text" name="feedquestion" class="feedback-question-input" placeholder="Type your question here" required>
+                            </div>
+                    
+                            <div class="feedback-response-section">
+                                <label class="feedback-response-label">Select Response Type</label>
+                                <select class="feedback-response-select" name="optiontype" id="responseTypeSelect">
+                                    <option value="">Choose a response type...</option>
+                                    <option value="usefulness">Usefulness</option>
+                                    <option value="importance">Importance</option>
+                                    <option value="custom">Custom Option</option>
+                                </select>
+                                <div class="feedback-values-container"></div>
+                                <div class="feedback-custom-section">
+                                    <div class="feedback-custom-header">
+                                        <label>Custom Values:</label>
+                                        <button type="button" class="feedback-custom-add-btn">+ Add Value</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="video-container">
-                                <label for="Question" class="Question-label">Add a Question</label>
-                                <input type="text" placeholder="type here" name="feedquestion" class="Question-input">
-                            </div>
+                    
+                            <button class="feedback-submit-btn" type="submit" id="add-ctgry-form-btn">Add Question</button>
                         </div>
-                
-                        <button class="btn-loader" type="submit" id="add-ctgry-form-btn">Add Question</button>
                     </form>
+                    
+                    <div class="feedback-modal">
+                        <div class="feedback-modal-content">
+                            <div class="feedback-modal-title">
+                                <span class="feedback-modal-checkmark">✓</span>
+                                <h3>Success!</h3>
+                            </div>
+                            <p>Your question has been added successfully. You can now add more questions.</p>
+                            <button class="feedback-modal-button" id="continue-reload">Continue</button>
+                        </div>
+                    </div>
                 </div>
                 
             </div>
