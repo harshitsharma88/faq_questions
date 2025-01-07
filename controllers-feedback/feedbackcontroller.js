@@ -49,9 +49,10 @@ async function storeNewFeedbackQuestion(req, res, next){
             {name : "PAGE", type: sql.NVarChar(100), value : page},
             {name : "CREATEDBY", type: sql.NVarChar(50), value : userid},
             {name : "CREATEDAT", type: sql.DateTime, value : new Date()},
-            {name : "RESPONSEOPTION", type : sql.NVarChar(1000), value : JSON.stringify(response_options || [])}
-        ]
+            {name : "RESPONSEOPTION", type : sql.NVarChar(1000), value : JSON.stringify(response_options || {})}
+        ];
         const result = await executeStoredProcedure("FEEDBACK_STORE_NEW_QUESTION", paramArray);
+        console.log(req.body,"\n", result)
         return res.status(200).json(result);
     } catch (error) {
         catchBlock(error, "Storing New FeedBack Question", res);
@@ -90,9 +91,26 @@ async function getAllFeedbackResponses(req, res, next){
     }
 }
 
+async function changeFeedbackQuestionDetails(req, res, next){
+    try {
+        const {qstnid, qstntitle, status, response_options} = req.body;
+        const paramArray = [
+            {name : "QSTIND", type : sql.Int, value : qstnid},
+            {name : "QSTNTITLE", type : sql.Int, value : qstntitle},
+            {name : "RESPONSEOPTIONS", type : sql.NVarChar(), value : qstnid},
+            {name : "STATUS", type : sql.Bit, value : status}
+        ];
+        const result = await executeStoredProcedure("FEEDBACK_UPDATE_QUESTION_DETAILS", paramArray);
+        return res.status(200).json(result);
+    } catch (error) {
+        catchBlock(error, "Editing Feedback Question Details")
+    }
+}
+
 module.exports = {
     getFeedbackQuestions,
     storeAgentResponse,
     storeNewFeedbackQuestion,
-    getAllFeedbackResponses
+    getAllFeedbackResponses,
+    changeFeedbackQuestionDetails
 }
