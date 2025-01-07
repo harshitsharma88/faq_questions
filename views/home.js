@@ -1,6 +1,6 @@
 const main_url = "https://apidev.cultureholidays.com/api";
 let base_URL = "";
-base_URL = "https://horribly-smashing-humpback.ngrok-free.app";
+base_URL = "https://artistic-humorous-hen.ngrok-free.app";
 // base_URL = "http://localhost:3000";
 
 const addNewQstnBtn = document.getElementById("add-qstn-top-btn");
@@ -949,7 +949,194 @@ async function storeNewFeedbackForm(event) {
   submitBtn.classList.add("loading")
   const {data} = await postRequest(`${base_URL}/feedback/storeqstn`,{title, page});
   submitBtn.classList.remove("loading");
-  console.log(data);
+
 }
 
 // console.log(location.pathname.replace("/","").split(".")[0])
+
+const responseTypes = {
+  usefulness: {
+      name: "Usefulness",
+      values: ["Not Useful", "Partly Useful", "Neutral", "Useful", "Very Useful"]
+  },
+  importance: {
+      name: "Importance",
+      values: ["Not Important", "Partly Important", "Neutral", "Important", "Very Important"]
+  },
+  custom: {
+      name: "Custom Option",
+      isCustom: true
+  }
+};
+
+let customValueCount = 0;
+const form = document.querySelector('#feedbackForm');
+const responseSelect = document.querySelector('.feedback-response-select');
+const valuesContainer = document.querySelector('.feedback-values-container');
+const customSection = document.querySelector('.feedback-custom-section');
+const submitBtn = document.querySelector('.feedback-submit-btn');
+const modal = document.querySelector('.feedback-modal');
+const modalButton = document.querySelector('.feedback-modal-button');
+const addCustomBtn = document.querySelector('.feedback-custom-add-btn');
+const addQuestionBtn = document.querySelector('#add-ctgry-form-btn');
+
+
+responseSelect.addEventListener('change', (e) => {
+    const selectedType = e.target.value;
+    valuesContainer.style.display = 'none';
+    customSection.style.display = 'none';
+    valuesContainer.innerHTML = '';
+    submitBtn.disabled = !selectedType;
+
+    if (selectedType && responseTypes[selectedType]) {
+        if (responseTypes[selectedType].isCustom) {
+            customSection.style.display = 'block';
+            submitBtn.disabled = true;
+        } else {
+          customValueCount =5;
+            valuesContainer.style.display = 'block';
+            responseTypes[selectedType].values.forEach((value, index) => {
+                const valueItem = document.createElement('div');
+                valueItem.className = 'feedback-value-item';
+                valueItem.innerHTML = `
+                    <span class="feedback-value-number">${index + 1}</span>
+                    <span class="feedback-value-text">${value}</span>
+                `;
+                valuesContainer.appendChild(valueItem);
+            });
+        }
+    }
+});
+
+addCustomBtn.addEventListener('click', () => {
+  console.log(customValueCount)
+    if (customValueCount < 6) {
+        const container = document.createElement('div');
+        container.className = 'custom-value-container';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'feedback-custom-input';
+        input.placeholder = `Custom value ${customValueCount + 1}`;
+        container.appendChild(document.createTextNode(`${customValueCount + 1}. `));
+        container.appendChild(input);
+        customSection.appendChild(container);
+
+        customValueCount++;
+        
+        input.addEventListener('input', () => {
+            // Enable submit button only when all 5 custom inputs are filled
+            const filledInputs = [...customSection.querySelectorAll('.feedback-custom-input')]
+                .filter(input => input.value.trim() !== '').length;
+            submitBtn.disabled = filledInputs !== 5;
+        });
+    }
+    
+    if (customValueCount >= 5) {
+        addCustomBtn.style.display = 'none';
+    }
+});
+
+const usefulness = {
+  "1" : "Not Useful",
+  "2" : "Partly Useful", 
+  "3" : "Neutral", 
+  "4" : "Useful", 
+  "5" : "Very Useful"
+}
+
+const  importance = {
+  "1" : "Not Important",
+  "2" :"Partly Important", 
+  "3" : "Neutral", 
+  "4" :"Important", 
+  "5" : "Very Important"
+}
+
+form.addEventListener('submit', async (e) => {
+    if (customValueCount < 5) {
+        e.preventDefault();
+        alert("Please provide exactly 5 custom values before submitting.");
+        return;
+    }
+
+    e.preventDefault();
+    customValueCount = 0;
+    console.log(customValueCount)
+    const page = e.target.feedpage.value;
+    const title = e.target.feedquestion.value;
+    const submitBtn = e.target.querySelector("button[type='submit']")
+    submitBtn.classList.add("loading")
+    modal.style.display = 'block';
+    let  response_options = {};
+    const selectedType = e.target.optiontype;
+    console.log(selectedType ," SELECTED TYPE")
+    if(selectedType == "usefulness"){
+      response_options = usefulness;
+    }
+    else if(selectedType == "importance"){
+      response_options = importance
+    }else{
+      customSection.querySelectorAll(".custom-value-container").forEach((res, index)=>{
+        const inputBox = res.querySelector("input[type='text']");
+        response_options[`${index + 1}`] = inputBox.value
+      })
+    }
+    console.log("Response OPtions", response_options);
+    const {data} = await postRequest(`${base_URL}/feedback/storeqstn`,{title, page, response_options});
+    submitBtn.classList.remove("loading");
+  
+    // form.reset();
+    submitBtn.disabled = true;
+    valuesContainer.style.display = 'none';
+    customSection.style.display = 'none';
+    customValueCount = 0;
+    customSection.innerHTML = `
+        <div class="feedback-custom-header">
+            <label>Custom Values:</label>
+            <button type="button" class="feedback-custom-add-btn">+ Add Value</button>
+        </div>
+    `;
+});
+
+addQuestionBtn.addEventListener('click', (e) => {
+    const selectedType = responseSelect.value;
+
+    if (!selectedType) {
+        e.preventDefault();
+        alert("Please select a response option before adding a question.");
+    }
+});
+
+document.getElementById("continue-reload").onclick = ()=>{
+  localStorage.setItem("reloadLogic","add-feedback");
+  location.reload();
+}
+
+modalButton.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const reloadLogic = localStorage.getItem("reloadLogic");
+  if(reloadLogic && reloadLogic == "add-feedback"){
+    localStorage.removeItem("reloadLogic");
+    document.getElementById("for-feedback-btn").click();
+  }
+});
+// function storeNewFeedbackForm(event) {
+//   event.preventDefault(); // Prevent the form from submitting by default
+
+//   // Get the selected response type
+//   const responseSelect = document.querySelector('#responseTypeSelect').value;
+
+//   // Check if a response type is selected
+//   if (!responseSelect) {
+//       alert('Please select a response type before adding a question.');
+//       return; // Stop execution if no response type is selected
+//   }
+
+//   // Proceed with storing or submitting the feedback form
+//   alert('Form submitted successfully!');
+//   document.getElementById('feedbackForm').reset(); // Reset the form after submission
+// }
