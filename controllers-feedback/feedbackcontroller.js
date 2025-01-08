@@ -2,7 +2,8 @@ const catchBlock = require("../utils/errorHandler");
 let { sql } = require('../dbConnection/sqlConnect');
 const { executeStoredProcedure } = require("../dbConnection/executingQuery");
 
-async function getFeedbackQuestions(req, res, next){
+// Unreplied Questions Page wise
+async function unRepliedFeedbackQuestions(req, res, next){
     try {
         const {agentid, page} = req.body;
         const paramArray = [
@@ -37,6 +38,21 @@ async function getFeedbackQuestions(req, res, next){
         // return res.status(200).json(allAvailableQuestions)
     } catch (error) {
         catchBlock(error, "Getting Feedback Questions", res)
+    }
+}
+
+// All Questions disabled or enabled
+async function getAllFeedbackQuestions(req, res, next){
+    try {
+        const {status, page} = req.query;
+        const paramArray = [
+            {name : "STATUS" , type : sql.NVarChar(50), value : status},
+            {name : "PAGE" , type : sql.NVarChar(100), value : page}
+        ];
+        const result = await executeStoredProcedure("FEEDBACK_GET_ALL_QUESTIONS", paramArray);
+        return res.status(200).json(result);
+    } catch (error) {
+        catchBlock(error, "Getting All Feedback Questions", res)
     }
 }
 
@@ -79,13 +95,14 @@ async function storeAgentResponse(req, res, next){
 
 async function getAllFeedbackResponses(req, res, next){
     try {
-        const {page, qstnid} = req.body;
+        const {page, qstnid, agentid} = req.body;
         const paramArray = [
-            {name : "PAGE", type : sql.NVarChar(100), value : page}
+            {name : "PAGE", type : sql.NVarChar(100), value : page},
+            {name : "QSTNID", type : sql.Int, value : qstnid},
+            {name : "AGENTID", type : sql.VarChar(), value : agentid}
         ]
-        const result = await executeStoredProcedure("",paramArray);
-        console.log(result);
-        return res.status(200)
+        const result = await executeStoredProcedure("FEEDBACK_GET_AGENT_RESPONSES",paramArray);
+        return res.status(200).json(result);
     } catch (error) {
         catchBlock(error, "Getting All FeedBack responses", res)
     }
@@ -95,9 +112,9 @@ async function changeFeedbackQuestionDetails(req, res, next){
     try {
         const {qstnid, qstntitle, status, response_options} = req.body;
         const paramArray = [
-            {name : "QSTIND", type : sql.Int, value : qstnid},
-            {name : "QSTNTITLE", type : sql.Int, value : qstntitle},
-            {name : "RESPONSEOPTIONS", type : sql.NVarChar(), value : qstnid},
+            {name : "QSTNId", type : sql.Int, value : qstnid},
+            {name : "QSTNTITLE", type : sql.VarChar, value : qstntitle},
+            {name : "RESPONSEOPTIONS", type : sql.NVarChar(), value : JSON.stringify(response_options)},
             {name : "STATUS", type : sql.Bit, value : status}
         ];
         const result = await executeStoredProcedure("FEEDBACK_UPDATE_QUESTION_DETAILS", paramArray);
@@ -108,9 +125,10 @@ async function changeFeedbackQuestionDetails(req, res, next){
 }
 
 module.exports = {
-    getFeedbackQuestions,
+    unRepliedFeedbackQuestions,
     storeAgentResponse,
     storeNewFeedbackQuestion,
     getAllFeedbackResponses,
-    changeFeedbackQuestionDetails
+    changeFeedbackQuestionDetails,
+    getAllFeedbackQuestions
 }
